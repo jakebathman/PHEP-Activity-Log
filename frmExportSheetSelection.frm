@@ -13,7 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'v3
+'v4
 
 Option Explicit
 
@@ -28,7 +28,7 @@ End Sub
 Private Sub btnExport_Click()
     Dim v, i
     Dim s1, s2, s3
-        
+
     With frmExportSheetSelection
         If .chk1.Value + .chk2.Value + .chk3.Value = False Then Unload frmExportSheetSelection: Exit Sub
         If .chk1.Value = True Then s1 = Trim(Mid(.chk1.Caption, 1, InStr(1, .chk1.Caption, " ", vbTextCompare)))
@@ -37,22 +37,22 @@ Private Sub btnExport_Click()
     End With
 
     Call mExportSheets(s1, s2, s3)
-        
+
 End Sub
 
 Private Sub cmbMonths_Change()
 
-Dim arrSheets(), arrPeriodsAndMonth()
-Dim i%, m%, j%
-Dim v, x, y, z
-Dim boolHasExportableStuff As Boolean
+    Dim arrSheets(), arrPeriodsAndMonth()
+    Dim i%, m%, j%
+    Dim v, x, y, z
+    Dim boolHasExportableStuff As Boolean
 
-'If Not frmExportSheetSelection.Visible Then Exit Sub
+    'If Not frmExportSheetSelection.Visible Then Exit Sub
 
-frmExportSheetSelection.chk1.Visible = False
-frmExportSheetSelection.chk2.Visible = False
-frmExportSheetSelection.chk3.Visible = False
-frmExportSheetSelection.lblNothingToExport.Visible = False
+    frmExportSheetSelection.chk1.Visible = False
+    frmExportSheetSelection.chk2.Visible = False
+    frmExportSheetSelection.chk3.Visible = False
+    frmExportSheetSelection.lblNothingToExport.Visible = False
 
     i = 1
     For Each v In ThisWorkbook.Sheets
@@ -62,9 +62,9 @@ frmExportSheetSelection.lblNothingToExport.Visible = False
             i = i + 1
         End If
     Next
-    
+
     ReDim arrPeriodsAndMonth(1 To 12, 1 To 3, 1 To 4)
-        
+
     For i = 1 To UBound(arrSheets)
         m = fMonthToInteger(ThisWorkbook.Sheets(arrSheets(i)).Range("B3").Value)
         For j = 1 To 3
@@ -79,10 +79,10 @@ frmExportSheetSelection.lblNothingToExport.Visible = False
     m = fMonthToInteger(frmExportSheetSelection.cmbMonths.Value)
     boolHasExportableStuff = False
     For j = 1 To 3
-        v = arrPeriodsAndMonth(m, j, 2) 'Month Name
-        x = arrPeriodsAndMonth(m, j, 1) 'Period (sheet) name
-        y = arrPeriodsAndMonth(m, j, 3) 'Period start date
-        z = arrPeriodsAndMonth(m, j, 4) 'Period end date
+        v = arrPeriodsAndMonth(m, j, 2)    'Month Name
+        x = arrPeriodsAndMonth(m, j, 1)    'Period (sheet) name
+        y = arrPeriodsAndMonth(m, j, 3)    'Period start date
+        z = arrPeriodsAndMonth(m, j, 4)    'Period end date
         If v <> vbNullString Then
             If v Like frmExportSheetSelection.cmbMonths.Value Then
                 boolHasExportableStuff = True
@@ -95,9 +95,11 @@ frmExportSheetSelection.lblNothingToExport.Visible = False
     Next j
     If boolHasExportableStuff = False Then frmExportSheetSelection.lblNothingToExport.Visible = True
 
-
-
-
+    With frmExportSheetSelection
+        If .chk1.Visible Then .chk1.Value = True
+        If .chk2.Visible Then .chk2.Value = True
+        If .chk3.Visible Then .chk3.Value = True
+    End With
 
 
 
@@ -105,26 +107,26 @@ End Sub
 
 Private Sub UserForm_Activate()
     With frmExportSheetSelection
-      .StartUpPosition = 0
-      .Left = Application.Left + (0.5 * Application.Width) - (0.5 * .Width)
-      .Top = Application.Top + (0.5 * Application.Height) - (0.5 * .Height)
+        .StartUpPosition = 0
+        .Left = Application.Left + (0.5 * Application.Width) - (0.5 * .Width)
+        .Top = Application.Top + (0.5 * Application.Height) - (0.5 * .Height)
     End With
 End Sub
 
 Private Sub UserForm_Initialize()
-Dim strMonths$
-Dim v, c
+    Dim strMonths$
+    Dim v, c
 
-strMonths = "January;February;March;April;May;June;July;August;September;October;November;December"
+    strMonths = "January;February;March;April;May;June;July;August;September;October;November;December"
 
     v = Split(strMonths, ";", -1, vbTextCompare)
-    For c = 0 To 11 'starts at 0 because the variant array v() does so
+    For c = 0 To 11    'starts at 0 because the variant array v() does so
         frmExportSheetSelection.cmbMonths.AddItem v(c)
     Next c
-    
+
     MonthName (Month(DateSerial(Year(Now), Month(Now) - 1, Day(Now))))
     frmExportSheetSelection.cmbMonths.Value = MonthName(Month(DateSerial(Year(Now), Month(Now) - 1, Day(Now))))
 
-    
+
 
 End Sub

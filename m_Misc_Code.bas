@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Misc_Code"
-'v3
+'v4
 
 Option Explicit
 Public Const pthUpdatedWorkbookPath = "\\ccdata01\homeland_security\PHEP Documentation\Monthly Reports\Activity Tracking\"
@@ -9,7 +9,7 @@ Public Const strActivityCategories = "Administrative Work;Budget or Documentatio
 Public arrActivityCategories(1 To 19) As String
 
 Public Sub mShowALLTHETHINGS()
-Dim sh As Worksheet
+    Dim sh As Worksheet
     For Each sh In Application.Worksheets
         Debug.Print sh.Name
         Debug.Print sh.Visible
@@ -22,9 +22,9 @@ Dim sh As Worksheet
 End Sub
 
 Public Sub mHideSOMEOFTHETHINGS(HideRefs As Boolean, HideTemplates As Boolean)
-    If HideRefs Then Sheet2.Visible = xlSheetVeryHidden 'Refs
+    If HideRefs Then Sheet2.Visible = xlSheetVeryHidden    'Refs
     If HideTemplates Then
-        Sheet4.Visible = xlSheetVeryHidden 'templatesheet
+        Sheet4.Visible = xlSheetVeryHidden    'templatesheet
         'Sheets("reporttemplatesheet").Visible = xlSheetVeryHidden 'reporttemplatesheet
     End If
 End Sub
@@ -37,27 +37,27 @@ Public Sub mUpdateCategories()
     Dim shtRefs As Worksheet
     Dim tmpRange As Range
     Dim rngNamedActCategoryRange As Range
-    
+
     v = Split(strActivityCategories, ";", -1, vbTextCompare)
-    For c = 0 To 18 'starts at 0 because the variant array v() does so
+    For c = 0 To 18    'starts at 0 because the variant array v() does so
         arrActivityCategories(c + 1) = v(c)
     Next c
-    
-    
+
+
     Set shtRefs = ActiveWorkbook.Sheets("Refs")
     Set rngNamedActCategoryRange = shtRefs.Range(Cells(2, 2).Address, Cells(UBound(arrActivityCategories) + 1, 2).Address)
-        
+
     'If rngNamedActCategoryRange.Count = UBound(arrActivityCategories) Then Exit Sub
-        
-    
+
+
     'Set wb = ActiveWorkbook
-    
+
     c = 1
     For Each vCell In rngNamedActCategoryRange
         vCell.Value = arrActivityCategories(c)
         c = c + 1
     Next
-    
+
 End Sub
 
 
@@ -103,30 +103,30 @@ Public Sub uUpdateTheUpdateCode()
     Dim actApp As Application
     Dim actWB As Workbook
     Dim actWS As Worksheet
-    
+
     Set actApp = Application
     Set actWB = actApp.ActiveWorkbook
     Set actWS = actWB.ActiveSheet
-    
+
     boolTriedTwice = False
-    
+
     strVers = Sheets("Refs").Range("L2").Value
-    
-    
+
+
     Set tVBProj = ActiveWorkbook.VBProject
-    
-        Dim f
-        'Get updated file using path
-        On Error GoTo errCouldntListDir
-        f = Dir(pthUpdatedWorkbookPath)
-        tFilePathFull = pthUpdatedWorkbookPath & f
-'        Do While f <> ""
-'            Debug.Print f
-'            Debug.Print FileLen(pthUpdatedWorkbookPath & f)
-'            Debug.Print FileDateTime(pthUpdatedWorkbookPath & f)
-'            Get next File
-'            f = Dir()
-'        Loop
+
+    Dim f
+    'Get updated file using path
+    On Error GoTo errCouldntListDir
+    f = Dir(pthUpdatedWorkbookPath)
+    tFilePathFull = pthUpdatedWorkbookPath & f
+    '        Do While f <> ""
+    '            Debug.Print f
+    '            Debug.Print FileLen(pthUpdatedWorkbookPath & f)
+    '            Debug.Print FileDateTime(pthUpdatedWorkbookPath & f)
+    '            Get next File
+    '            f = Dir()
+    '        Loop
     On Error GoTo errOtherUpdateErr
     If f <> vbNullString And StrComp(f, ActiveWorkbook.Name, vbTextCompare) <> 0 Then
         Dim app As New Excel.Application
@@ -134,13 +134,13 @@ Public Sub uUpdateTheUpdateCode()
         Set book = app.Workbooks.Add(tFilePathFull)
 
         Set fVBProj = book.VBProject
-        
-        
+
+
         'Call uListModules(arrListOfNewModules, intNumModules, fVBProj)
         'Call uListModules(arrListOfModules, intNumNewModules, tVBProj)
         c = 1
         For Each vC In fVBProj.VBComponents
-            
+
             If vC.Name = "u_Update_Code" Then
                 v = CopyModule(c, fVBProj, tVBProj, True, actWB.Path)
                 Exit For
@@ -152,31 +152,31 @@ Public Sub uUpdateTheUpdateCode()
             Wend
             c = c + 1
         Next
-        
-        
+
+
         book.Close SaveChanges:=False
         Set book = Nothing
         app.Quit
         Set app = Nothing
-        
+
         v = TotalCodeLinesInVBComponent(tVBProj.VBComponents("v_Version_Num")) - 3
         'Debug.Print v
         strVersNew = CStr(v)
         Sheets("Refs").Range("L2").Value = strVersNew
         Sheets("Refs").Range("Q2").Value = "TRUE"
-        
+
         'Call MsgBox("Update to the updating code complete!!" & vbNewLine & vbNewLine _
-                & "This is Version " & strVersNew & " of this tool." & vbNewLine & vbNewLine _
-                & " ")
+         & "This is Version " & strVersNew & " of this tool." & vbNewLine & vbNewLine _
+         & " ")
         Application.StatusBar = "Update code had to be completed (seriously). It's done!"
-        
+
     Else
         Call MsgBox("Looks like you've got the latest version!" & vbNewLine & vbNewLine _
-                & "This is Version " & strVers & vbNewLine & vbNewLine _
-                & "It's possible you're not able to access the PHEP drive, which may result in this message.")
+                  & "This is Version " & strVers & vbNewLine & vbNewLine _
+                  & "It's possible you're not able to access the PHEP drive, which may result in this message.")
     End If
 
-Exit Sub
+    Exit Sub
 
 errCouldntListDir:
     If Not boolTriedTwice Then
@@ -188,10 +188,10 @@ errCouldntListDir:
         End If
     Else
         Call MsgBox("I've tried again and failed. You probably can't connect to the PHEP drive." & vbNewLine & vbNewLine _
-                & "Go get Jake, he'll know what to do...", vbOK, ":(")
+                  & "Go get Jake, he'll know what to do...", vbOK, ":(")
     End If
 
-    
+
 errOtherUpdateErr:
     On Error Resume Next
     book.Close SaveChanges:=False
@@ -201,7 +201,7 @@ errOtherUpdateErr:
     On Error GoTo 0
 
     MsgBox ("Sorry! Something went wrong :(" & vbNewLine & vbNewLine & "The code was NOT updated." _
-            & vbNewLine & vbNewLine & "Error #: " & Err.Number & vbNewLine & "Error text: " & Err.Description)
+          & vbNewLine & vbNewLine & "Error #: " & Err.Number & vbNewLine & "Error text: " & Err.Description)
 
 
 End Sub
@@ -210,34 +210,34 @@ End Sub
 
 ' Code below copied from http://www.cpearson.com/excel/vbe.aspx
 Function CopyModule(ByVal iItemNum, _
-    FromVBProject As VBIDE.VBProject, _
-    ToVBProject As VBIDE.VBProject, _
-    OverwriteExisting As Boolean, strPathToWB As String) As Boolean
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    ' CopyModule
-    ' This function copies a module from one VBProject to
-    ' another. It returns True if successful or False
-    ' if an error occurs.
-    '
-    ' Parameters:
-    ' --------------------------------
-    ' FromVBProject         The VBProject that contains the module
-    '                       to be copied.
-    '
-    ' ToVBProject           The VBProject into which the module is
-    '                       to be copied.
-    '
-    ' CodeModuleName            The name of the module to copy.
-    '
-    ' OverwriteExisting     If True, the VBComponent named CodeModuleName
-    '                       in ToVBProject will be removed before
-    '                       importing the module. If False and
-    '                       a VBComponent named CodeModuleName exists
-    '                       in ToVBProject, the code will return
-    '                       False.
-    '
-    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    
+                    FromVBProject As VBIDE.VBProject, _
+                    ToVBProject As VBIDE.VBProject, _
+                    OverwriteExisting As Boolean, strPathToWB As String) As Boolean
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' CopyModule
+' This function copies a module from one VBProject to
+' another. It returns True if successful or False
+' if an error occurs.
+'
+' Parameters:
+' --------------------------------
+' FromVBProject         The VBProject that contains the module
+'                       to be copied.
+'
+' ToVBProject           The VBProject into which the module is
+'                       to be copied.
+'
+' CodeModuleName            The name of the module to copy.
+'
+' OverwriteExisting     If True, the VBComponent named CodeModuleName
+'                       in ToVBProject will be removed before
+'                       importing the module. If False and
+'                       a VBComponent named CodeModuleName exists
+'                       in ToVBProject, the code will return
+'                       False.
+'
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
     Dim VBComp As VBIDE.VBComponent
     Dim FName As String
     Dim CompName As String
@@ -245,7 +245,7 @@ Function CopyModule(ByVal iItemNum, _
     Dim SlashPos As Long
     Dim ExtPos As Long
     Dim TempVBComp As VBIDE.VBComponent
-    
+
     '''''''''''''''''''''''''''''''''''''''''''''
     ' Do some housekeeping validation.
     '''''''''''''''''''''''''''''''''''''''''''''
@@ -253,34 +253,34 @@ Function CopyModule(ByVal iItemNum, _
         CopyModule = False
         Exit Function
     End If
-    
+
     If Trim(FromVBProject.VBComponents.Item(iItemNum).Name) = vbNullString Then
         CopyModule = False
         Exit Function
     End If
-    
+
     If ToVBProject Is Nothing Then
         CopyModule = False
         Exit Function
     End If
-    
+
     If FromVBProject.Protection = vbext_pp_locked Then
         CopyModule = False
         Exit Function
     End If
-    
+
     If ToVBProject.Protection = vbext_pp_locked Then
         CopyModule = False
         Exit Function
     End If
-    
+
     On Error Resume Next
     Set VBComp = FromVBProject.VBComponents.Item(iItemNum)
     If Err.Number <> 0 Then
         CopyModule = False
         Exit Function
     End If
-    
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''
     ' FName is the name of the temporary file to be
     ' used in the Export/Import code.
@@ -322,13 +322,13 @@ Function CopyModule(ByVal iItemNum, _
             End If
         End If
     End If
-    
+
     ''''''''''''''''''''''''''''''''''''''''''''''''''''
     ' Do the Export and Import operation using FName
     ' and then Kill FName.
     ''''''''''''''''''''''''''''''''''''''''''''''''''''
     FromVBProject.VBComponents.Item(iItemNum).Export FileName:=FName
-    
+
     '''''''''''''''''''''''''''''''''''''
     ' Extract the module name from the
     ' export file name.
@@ -336,7 +336,7 @@ Function CopyModule(ByVal iItemNum, _
     SlashPos = InStrRev(FName, "\")
     ExtPos = InStrRev(FName, ".")
     CompName = Mid(FName, SlashPos + 1, ExtPos - SlashPos - 1)
-    
+
     ''''''''''''''''''''''''''''''''''''''''''''''
     ' Document modules (SheetX and ThisWorkbook)
     ' cannot be removed. So, if we are working with
@@ -346,7 +346,7 @@ Function CopyModule(ByVal iItemNum, _
     ''''''''''''''''''''''''''''''''''''''''''''''
     Set VBComp = Nothing
     Set VBComp = ToVBProject.VBComponents(CompName)
-    
+
     If VBComp Is Nothing Then
         ToVBProject.VBComponents.Import FileName:=FName
     Else
@@ -377,34 +377,34 @@ End Function
 
 
 Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
-    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    ' This returns the total number of code lines (excluding blank lines and
-    ' comment lines) in the VBComponent referenced by VBComp. Returns -1
-    ' if the VBProject is locked.
-    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-        Dim N As Long
-        Dim s As String
-        Dim LineCount As Long
-        
-        If VBComp.Collection.Parent.Protection = vbext_pp_locked Then
-            TotalCodeLinesInVBComponent = -1
-            Exit Function
-        End If
-        
-        With VBComp.CodeModule
-            For N = 1 To .CountOfLines
-                s = .Lines(N, 1)
-                If Trim(s) = vbNullString Then
-                    ' blank line, skip it
-                ElseIf Left(Trim(s), 1) = "'" Then
-                    ' comment line, skip it
-                Else
-                    LineCount = LineCount + 1
-                End If
-            Next N
-        End With
-        TotalCodeLinesInVBComponent = LineCount
-    End Function
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' This returns the total number of code lines (excluding blank lines and
+' comment lines) in the VBComponent referenced by VBComp. Returns -1
+' if the VBProject is locked.
+''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    Dim N As Long
+    Dim s As String
+    Dim LineCount As Long
+
+    If VBComp.Collection.Parent.Protection = vbext_pp_locked Then
+        TotalCodeLinesInVBComponent = -1
+        Exit Function
+    End If
+
+    With VBComp.CodeModule
+        For N = 1 To .CountOfLines
+            s = .Lines(N, 1)
+            If Trim(s) = vbNullString Then
+                ' blank line, skip it
+            ElseIf Left(Trim(s), 1) = "'" Then
+                ' comment line, skip it
+            Else
+                LineCount = LineCount + 1
+            End If
+        Next N
+    End With
+    TotalCodeLinesInVBComponent = LineCount
+End Function
 
 
 
@@ -419,10 +419,10 @@ Function CountCodeLines()
     Dim VBCodeModule As Object
     Dim NumLines As Long, N As Long
     With ActiveWorkbook
-          For N = 1 To .VBProject.VBComponents.Count
-                Set VBCodeModule = .VBProject.VBComponents(N).CodeModule
-                NumLines = NumLines + VBCodeModule.CountOfLines
-          Next
+        For N = 1 To .VBProject.VBComponents.Count
+            Set VBCodeModule = .VBProject.VBComponents(N).CodeModule
+            NumLines = NumLines + VBCodeModule.CountOfLines
+        Next
     End With
     NumLines = NumLines - 13    ' exclude this module from the count
     'MsgBox "Total number of lines of code in the project = " & NumLines, , "Code Lines"
@@ -445,7 +445,7 @@ Sub ListOpenBooks()
     Dim wb As Workbook
 
     For Each wb In Application.Workbooks
-          Debug.Print "Open workbook: " & wb.Name
+        Debug.Print "Open workbook: " & wb.Name
     Next wb
 End Sub
 
@@ -453,3 +453,39 @@ End Sub
 
 
 
+
+'---------------------------------------------------------------------------------------
+' Procedure : ReviseVersionNumberComment
+' Author    : E008922
+' Date      : 10/16/2012
+' Purpose   : Revise the version number comment at the top of every code module
+'---------------------------------------------------------------------------------------
+'
+Public Sub ReviseVersionNumberComment()
+
+    On Error GoTo ReviseVersionNumberComment_Error
+    Dim v, x, y
+    Dim s$, r$
+
+    s = "'v3"
+    r = "'v4"
+
+    'With ThisWorkbook.VBProject.VBComponents.Item(
+    For Each v In ThisWorkbook.VBProject.VBComponents
+        'x = ThisWorkbook.VBProject.VBComponents.Item.CodeModule.Find(s, 1, 1, 2, 5, False, True, False)
+        x = v.CodeModule.Find(s, 1, 1, 2, 5, False, True, False)
+        'Debug.Print v.Name & ": found v3?" & vbTab & x & vbTab & "looks like: " & v.CodeModule.Lines(1, 1)
+        If x Then
+            Call v.CodeModule.ReplaceLine(1, r)
+        End If
+        'x = v.CodeModule.Find(s, 1, 1, 2, 5, False, True, False)
+        'Debug.Print v.Name & ": found v3?" & vbTab & x & vbTab & "looks like: " & v.CodeModule.Lines(1, 1)
+    Next
+
+    On Error GoTo 0
+    Exit Sub
+
+ReviseVersionNumberComment_Error:
+
+    MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure ReviseVersionNumberComment of Module m_Misc_Code"
+End Sub

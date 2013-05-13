@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Add_Activity_Row"
-'v3
+'v4
 
 Option Explicit
 
@@ -67,19 +67,53 @@ Public Function fAddNewLineAndActivity(intRow%, intCol%, dblT#, strA$)
         With Cells(intRow, i)
             Select Case i
                 Case 1
-                    .Style = "Normal"
-                    .HorizontalAlignment = xlRight
-                    .Font.Bold = True
+                    .Style = "ActivityName"
                 Case 16
                     .Style = "Normal"
-                    .HorizontalAlignment = xlCenter
                     .Font.Bold = True
                 Case Else
                     .Style = "Normal"
-                    .HorizontalAlignment = xlCenter
                     .Font.Bold = False
             End Select
         End With
     Next i
 End Function
 
+
+Public Sub mUpdateHourLabels()
+    Dim i%, intDateCol%
+    Dim strHrs$, strHrsToEight$
+    Dim dblHrs#, dblHrsToEight#
+    With frmAddActivity
+        If .cmbDate.Value <> vbNullString Then
+            For i = 1 To 100
+                If ActiveSheet.Cells(i, 1).Value Like "Total:" Then
+                    intDateCol = .cmbDate.ListIndex + 2
+                    dblHrs = ActiveSheet.Cells(i, intDateCol).Value
+                    strHrs = Format(dblHrs, "#0.00")
+                    If dblHrs = 1 Then strHrs = strHrs & " hour" Else strHrs = strHrs & " hours"
+                    .lblDayTotalHours = "This day's current total is " & strHrs
+                    
+                    dblHrsToEight = 8 - dblHrs
+                    strHrsToEight = Format(dblHrsToEight, "#0.00")
+                    If dblHrsToEight = 1 Then strHrsToEight = strHrsToEight & " hour" Else strHrsToEight = strHrsToEight & " hours"
+                    Select Case dblHrsToEight
+                        Case Is > 0
+                            .lblHrsToEight = "You need " & strHrsToEight & " to reach 8"
+                            .lblHrsToEight.ForeColor = &HC0&        'red
+                        Case 0
+                            .lblHrsToEight = "You right at 8 hours for this day!"
+                            .lblHrsToEight.ForeColor = &H8000&      'green
+                        Case Is < 0
+                            .lblHrsToEight = "You're over 8 hours by " & Replace(strHrsToEight, "-", "", , , vbTextCompare)
+                            .lblHrsToEight.ForeColor = &HC000C0     'pink
+                    End Select
+                    Exit Sub
+                End If
+            Next i
+        Else
+            .lblDayTotalHours = vbNullString
+            .lblHrsToEight = vbNullString
+        End If
+    End With
+End Sub
