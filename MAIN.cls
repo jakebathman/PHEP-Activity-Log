@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-'v4
+'v4.1
 
 Option Explicit
 
@@ -41,4 +41,26 @@ Private Sub btnUpdateCode_Click()
     If MsgBox("Update this tool to the latest version?" & vbNewLine & vbNewLine & "This will look for a newer version on the PHEP drive.", vbOKCancel) = vbOK Then
         Call uUpdateCode
     End If
+End Sub
+
+Private Sub CommandButton1_Click()
+
+End Sub
+
+Private Sub frmBugButton_Click()
+    frmBug.Show
+End Sub
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    With Sheets("Refs")
+        If .Range("Q2").Value = "FALSE" Or .Range("Q2").Value = False Or .Range("Q2").Value = vbNullString Then
+            If MsgBox("Some back-end code needs to be udpated. You should do that soon. How about now?", vbYesNo + vbExclamation) = vbYes Then
+                .Range("Q1").Value = "UpdateCodeInSync"
+                .Range("Q2").Value = "FALSE"
+                Call uUpdateTheUpdateCode
+            End If
+        End If
+    End With
+    
+
 End Sub

@@ -1,5 +1,5 @@
 Attribute VB_Name = "f_Sort_1D_Array"
-'v4
+'v4.1
 
 Option Explicit
 

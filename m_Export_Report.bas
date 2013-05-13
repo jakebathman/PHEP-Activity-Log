@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Export_Report"
-'v4
+'v4.1
 
 Option Explicit
 
@@ -156,12 +156,23 @@ Public Sub mExportSheets(ByVal strSheet1$, Optional ByVal strSheet2$, Optional B
 
     Next
 
+    With Workbooks(strTempNewWBName).Sheets(1)
+        .Rows(1).Insert (1)
+        .Range("A1").Value = strEmpName
+        .Range("A2").Select
+        Selection.Copy
+        .Range("A1").Select
+        Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, SkipBlanks:=False, Transpose:=False
+        .Range("A1").HorizontalAlignment = xlCenter
+        Application.CutCopyMode = False
+    End With
+
     With Workbooks(strTempNewWBName)
         .Sheets("Sheet2").Delete
         .Sheets("Sheet3").Delete
         .Sheets(1).Columns("A:Z").EntireColumn.AutoFit
     End With
-    
+
     Call fSetPrintSettings(Workbooks(strTempNewWBName).Sheets(1))
 
 

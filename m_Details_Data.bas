@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Details_Data"
-'v4
+'v4.1
 
 Option Explicit
 

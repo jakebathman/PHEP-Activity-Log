@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_New_Sheet"
-'v4
+'v4.1
 
 Option Explicit
 
@@ -24,9 +24,10 @@ intYear = Year(Now)
 intNextYear = intYear + 1
 intOldYear = intYear - 1
 intPeriodsBetween = DateDiff("ww", dtIndex, dtToday, vbMonday) / 2
-intCurPayPeriod = intPeriodsBetween + 1
-intNextPayPeriod = intCurPayPeriod + 1
+intCurPayPeriod = (intPeriodsBetween + 1) Mod 26
+intNextPayPeriod = (intCurPayPeriod + 1) Mod 26
 intOldPayPeriod = intCurPayPeriod - 1
+If intOldPayPeriod = 0 Then intOldPayPeriod = 26
 
 strPayPeriod = fMakeTwoDigitPayPeriod(intCurPayPeriod)
 strNextPayPeriod = fMakeTwoDigitPayPeriod(intNextPayPeriod)

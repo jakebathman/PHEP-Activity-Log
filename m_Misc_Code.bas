@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Misc_Code"
-'v4
+'v4.1
 
 Option Explicit
 Public Const pthUpdatedWorkbookPath = "\\ccdata01\homeland_security\PHEP Documentation\Monthly Reports\Activity Tracking\"
@@ -91,27 +91,50 @@ End Sub
 
 
 Public Sub uUpdateTheUpdateCode()
-    Dim arrListOfModules(), arrListOfNewModules()
+    Dim arrListOfModules(), arrListOfNewModules(), arrListOfModulesAfterUpdate()
     Dim intNumModules%, intNumNewModules%, i%, j%
     Dim fVBProj As VBIDE.VBProject
     Dim tVBProj As VBIDE.VBProject
     Dim tFilePathFull$, strVers$, strVersNew$
     Dim t
     Dim c%
-    Dim v, vC
-    Dim boolTriedTwice As Boolean
+    Dim v
+    Dim vC As VBComponent
+    Dim boolTriedTwice As Boolean, boolNoMissingModules As Boolean
     Dim actApp As Application
     Dim actWB As Workbook
     Dim actWS As Worksheet
+    Dim strActWBFileName$, strActWBFilePath$, strActWBFullPath$, strActWBBackupPath$, strActWBFileTitle$
+    Dim strNewWBFileName$, strNewWBFilePath$, strNewWBFullPath$, strNewWbFileTitle$
+    Dim strFileNameConventionInside$
+    Dim intCurVersion%, dblCurVersion#
+    Dim intNewVersion%, dblNewVersion#
+    Dim strFileNameExtras$
+
+    Dim boolServerFileIsDifferent As Boolean
+
+
+    ' Check for macro security settings
+
+    boolServerFileIsDifferent = True
+
 
     Set actApp = Application
     Set actWB = actApp.ActiveWorkbook
     Set actWS = actWB.ActiveSheet
+    actWB.Save
+    strActWBFileName = actWB.Name
+    strActWBFilePath = actWB.Path
+    strActWBFullPath = strActWBFilePath & "\" & strActWBFileName
+    strActWBBackupPath = strActWBFilePath & "\OLD_" & strActWBFileName
+    strActWBFileTitle = Replace(strActWBFileName, ".xlsm", "", Compare:=vbTextCompare)
+    strFileNameConventionInside = "PHEP activity log v"
 
     boolTriedTwice = False
 
     strVers = Sheets("Refs").Range("L2").Value
-
+    
+    On Error GoTo errOtherUpdateErr
 
     Set tVBProj = ActiveWorkbook.VBProject
 
@@ -120,49 +143,177 @@ Public Sub uUpdateTheUpdateCode()
     On Error GoTo errCouldntListDir
     f = Dir(pthUpdatedWorkbookPath)
     tFilePathFull = pthUpdatedWorkbookPath & f
-    '        Do While f <> ""
-    '            Debug.Print f
-    '            Debug.Print FileLen(pthUpdatedWorkbookPath & f)
-    '            Debug.Print FileDateTime(pthUpdatedWorkbookPath & f)
-    '            Get next File
-    '            f = Dir()
-    '        Loop
     On Error GoTo errOtherUpdateErr
-    If f <> vbNullString And StrComp(f, ActiveWorkbook.Name, vbTextCompare) <> 0 Then
+
+    If f <> vbNullString And boolServerFileIsDifferent Then
+        Application.StatusBar = "Server file is different! Starting update of update code..."
+
         Dim app As New Excel.Application
         Dim book As Excel.Workbook
-        Set book = app.Workbooks.Add(tFilePathFull)
-
+        Set book = app.Workbooks.Open(tFilePathFull)
+        
+        t = Timer
+        While Timer < t + 0.2
+            DoEvents
+        Wend
+        
         Set fVBProj = book.VBProject
 
-
-        'Call uListModules(arrListOfNewModules, intNumModules, fVBProj)
-        'Call uListModules(arrListOfModules, intNumNewModules, tVBProj)
+        Call uListModules(arrListOfNewModules, intNumModules, fVBProj)
+        Call uListModules(arrListOfModules, intNumNewModules, tVBProj)
         c = 1
-        For Each vC In fVBProj.VBComponents
+        Err.Clear
 
-            If vC.Name = "u_Update_Code" Then
-                v = CopyModule(c, fVBProj, tVBProj, True, actWB.Path)
-                Exit For
-            End If
+
+'''''''''''''''     NEW UNTESTED CODE COPIED FROM CODE UPDATE MODULE    ''''''''''''''''''''''''''
+
+        Dim strTmpFldr$, strTmpFldrPath$
+        Dim Fs As Object
+
+
+        strTmpFldr = "tmpcodemodules"
+        If StrComp(Right(strActWBFilePath, 1), "\", vbTextCompare) <> 0 Then strTmpFldr = "\" & strTmpFldr
+        v = strActWBFilePath & strTmpFldr
+        strTmpFldrPath = v
+        Debug.Print v
+        If Len(Dir(strActWBFilePath & strTmpFldr, vbDirectory)) <> 0 Then
+            Set Fs = CreateObject("Scripting.FileSystemObject")
+            Fs.DeleteFolder v, True
+        End If
+        MkDir (strActWBFilePath & strTmpFldr)
+
+        For Each vC In fVBProj.VBComponents
+            Application.StatusBar = "Looking for Update Code module..."
+
+            On Error GoTo errOtherUpdateErr
+            If vC.Name = "u_Update_Code" Or vC.Name = "frmWorking" Then
+                v = ExportVBComponent(vC, strActWBFilePath & strTmpFldr, , True)
+                If v <> True Then Call MsgBox("Problem with " & vC.Name & " export :(")
             t = Timer
             While Timer < t + 0.1
-                actWB.Activate
                 DoEvents
             Wend
+            End If
+            
             c = c + 1
+            On Error Resume Next
+            Debug.Print Len(tVBProj.VBComponents("frmWorking").Name)
+            If Err.Number = 0 Then Call UpdateProgressBar(" ", (c / fVBProj.VBComponents.Count) * 100): Err.Clear
+            On Error GoTo errOtherUpdateErr
         Next
 
 
+        Dim m As VBComponent
+        'delete existing u_Update_Code and frmWorking
+        For Each m In actWB.VBProject.VBComponents
+            Debug.Print actWB.VBProject.VBComponents.Count
+            If m.Name = "frmworking" Then  'or m.Name <> "u_Update_Code" Then
+                Application.StatusBar = "Deleting " & m.Name
+                actWB.VBProject.VBComponents.Remove m
+                On Error Resume Next
+                    actWB.VBProject.VBComponents.Item("u_Update_Code1").Activate
+                    Debug.Print actWB.VBProject.VBComponents.Item("u_Update_Code1").Name
+                    If Err.Number <> 0 Then actWB.VBProject.VBComponents.Remove m
+                On Error GoTo errOtherUpdateErr
+            End If
+        Next
+
+        c = 0
+
+        'now do the importing
+        'modified version of code found on: http://stackoverflow.com/questions/10380312/loop-through-files-in-a-folder-using-vba
+
+        Dim MyObj As Object, MySource As Object, file As Variant
+        Dim sText As String
+        Dim vArray
+        Dim lCnt As Long
+        Dim tmpComp As VBComponent
+        Dim tmpCodeMod As CodeModule
+        Dim tmpModName$
+        Dim s
+        Dim TempVBComp As VBComponent
+        Dim filepth$
+        Dim newfilepth$
+        Dim ModName$
+
+        file = Dir(strActWBFilePath & strTmpFldr & "\")
+        While (file <> "")
+            filepth = strActWBFilePath & strTmpFldr & "\" & file
+            Debug.Print c & ": " & file
+            On Error Resume Next
+            If InStr(1, file, "u_Update_Code", vbTextCompare) > 0 Then
+                Name filepth As strActWBFilePath & strTmpFldr & "\tmp" & file
+                newfilepth = strActWBFilePath & strTmpFldr & "\tmp" & file
+                tmpModName = "tmp" & Left(file, Len(file) - 4)
+                ModName = Left(file, Len(file) - 4)
+                Set TempVBComp = actWB.VBProject.VBComponents.Import(newfilepth)
+                TempVBComp.Name = tmpModName
+                Set tmpComp = actWB.VBProject.VBComponents(ModName)
+                Set tmpCodeMod = tmpComp.CodeModule
+
+
+                With tmpCodeMod
+                    .DeleteLines 1, .CountOfLines
+                    s = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
+                    .InsertLines 1, s
+                End With
+                actWB.VBProject.VBComponents.Remove TempVBComp
+
+            ElseIf InStr(1, file, ".frx", vbTextCompare) = 0 Then
+                Application.StatusBar = "Importing module " & file
+                actWB.VBProject.VBComponents.Import (strActWBFilePath & strTmpFldr & "\" & file)
+            End If
+            If InStr(1, file, ".frx", vbTextCompare) > 0 Then intNumNewModules = intNumNewModules - 1
+            On Error GoTo errOtherUpdateErr
+            'Call UpdateProgressBar(" ", (c / intNumNewModules) * 100):
+            t = Timer
+            While Timer < t + 0.05
+                DoEvents
+            Wend
+            c = c + 1
+            file = Dir
+        Wend
+
+        v = book.Sheets("Refs").Range("L2").Value
+
+        
         book.Close SaveChanges:=False
         Set book = Nothing
         app.Quit
         Set app = Nothing
 
-        v = TotalCodeLinesInVBComponent(tVBProj.VBComponents("v_Version_Num")) - 3
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+        '   Delete the tmpcodemodules folder, now that we're done with it
+        Debug.Print "Starting attempt to delete temp folder"
+        If Len(Dir(strActWBFilePath & strTmpFldr, vbDirectory)) <> 0 Then
+            Debug.Print "Looks like it exists!"
+            Debug.Print "Setting Fs to an object"
+            Set Fs = CreateObject("Scripting.FileSystemObject")
+            Debug.Print "Deleting Fs, which is at " & strTmpFldrPath
+            On Error Resume Next
+            Fs.DeleteFolder strTmpFldrPath, True
+            On Error GoTo errOtherUpdateErr
+            Debug.Print "Finished deleting Fs"
+        End If
+
+
+        'Pesky class modules shouldn't hang around
+        For Each vC In tVBProj.VBComponents
+            If vC.Type = vbext_ct_ClassModule Then tVBProj.VBComponents.Remove vC
+        Next
+
+
+
+
+
+
+        'v = TotalCodeLinesInVBComponent(tVBProj.VBComponents("v_Version_Num")) - 3
         'Debug.Print v
         strVersNew = CStr(v)
-        Sheets("Refs").Range("L2").Value = strVersNew
+        Sheets("Refs").Range("R1").Value = "UpdateCodeVersion"
+        Sheets("Refs").Range("R2").Value = strVersNew
         Sheets("Refs").Range("Q2").Value = "TRUE"
 
         'Call MsgBox("Update to the updating code complete!!" & vbNewLine & vbNewLine _
@@ -171,7 +322,7 @@ Public Sub uUpdateTheUpdateCode()
         Application.StatusBar = "Update code had to be completed (seriously). It's done!"
 
     Else
-        Call MsgBox("Looks like you've got the latest version!" & vbNewLine & vbNewLine _
+        'Call MsgBox("Looks like you've got the latest version!" & vbNewLine & vbNewLine _
                   & "This is Version " & strVers & vbNewLine & vbNewLine _
                   & "It's possible you're not able to access the PHEP drive, which may result in this message.")
     End If
@@ -205,6 +356,93 @@ errOtherUpdateErr:
 
 
 End Sub
+
+
+Public Function ExportVBComponent(VBComp As VBIDE.VBComponent, _
+                                  FolderName As String, _
+                                  Optional FileName As String, _
+                                  Optional OverwriteExisting As Boolean = True) As Boolean
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' This function exports the code module of a VBComponent to a text
+' file. If FileName is missing, the code will be exported to
+' a file with the same name as the VBComponent followed by the
+' appropriate extension.
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    Dim Extension As String
+    Dim FName As String
+    'Extension = ".txt"
+    Extension = GetFileExtension(VBComp:=VBComp)
+    If Trim(FileName) = vbNullString Then
+        FName = VBComp.Name & Extension
+    Else
+        FName = FileName
+        If InStr(1, FName, ".", vbBinaryCompare) = 0 Then
+            FName = FName & Extension
+        End If
+    End If
+
+    If StrComp(Right(FolderName, 1), "\", vbBinaryCompare) = 0 Then
+        FName = FolderName & FName
+    Else
+        FName = FolderName & "\" & FName
+    End If
+
+    If Dir(FName, vbNormal + vbHidden + vbSystem) <> vbNullString Then
+        If OverwriteExisting = True Then
+            Kill FName
+        Else
+            ExportVBComponent = False
+            Exit Function
+        End If
+    End If
+
+    VBComp.Export FileName:=FName
+    ExportVBComponent = True
+
+End Function
+
+Public Function GetFileExtension(VBComp As VBIDE.VBComponent) As String
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+' This returns the appropriate file extension based on the Type of
+' the VBComponent.
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    Select Case VBComp.Type
+        Case vbext_ct_ClassModule
+            GetFileExtension = ".cls"
+        Case vbext_ct_Document
+            GetFileExtension = ".cls"
+        Case vbext_ct_MSForm
+            GetFileExtension = ".frm"
+        Case vbext_ct_StdModule
+            GetFileExtension = ".bas"
+        Case Else
+            GetFileExtension = ".bas"
+    End Select
+
+End Function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -461,25 +699,22 @@ End Sub
 ' Purpose   : Revise the version number comment at the top of every code module
 '---------------------------------------------------------------------------------------
 '
-Public Sub ReviseVersionNumberComment()
+Public Sub ReviseVersionNumberComment() 'Optional sOld, Optional rNew)
 
     On Error GoTo ReviseVersionNumberComment_Error
     Dim v, x, y
     Dim s$, r$
 
-    s = "'v3"
-    r = "'v4"
+    'If sOld = vbNullString Then s = "'v3"
+    'If rNew = vbNullString Then r = "'v4.1"
+    s = "'v4"
+    r = "'v4.1"
 
-    'With ThisWorkbook.VBProject.VBComponents.Item(
     For Each v In ThisWorkbook.VBProject.VBComponents
-        'x = ThisWorkbook.VBProject.VBComponents.Item.CodeModule.Find(s, 1, 1, 2, 5, False, True, False)
         x = v.CodeModule.Find(s, 1, 1, 2, 5, False, True, False)
-        'Debug.Print v.Name & ": found v3?" & vbTab & x & vbTab & "looks like: " & v.CodeModule.Lines(1, 1)
         If x Then
             Call v.CodeModule.ReplaceLine(1, r)
         End If
-        'x = v.CodeModule.Find(s, 1, 1, 2, 5, False, True, False)
-        'Debug.Print v.Name & ": found v3?" & vbTab & x & vbTab & "looks like: " & v.CodeModule.Lines(1, 1)
     Next
 
     On Error GoTo 0
@@ -489,3 +724,9 @@ ReviseVersionNumberComment_Error:
 
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure ReviseVersionNumberComment of Module m_Misc_Code"
 End Sub
+
+
+
+
+
+

@@ -1,5 +1,5 @@
 Attribute VB_Name = "MAIN"
-'v4
+'v4.1
 
 Option Explicit
 
@@ -11,14 +11,6 @@ Public Sub mMain(ByVal a$, ByVal d$, ByVal t#, ByVal c%, Optional boolAddActivit
     
        
     Application.ScreenUpdating = False
-    
-    With Sheets("Refs")
-        If .Range("Q2").Value = "False" Or .Range("Q2").Value = vbNullString Then
-            .Range("Q1").Value = "UpdateCodeInSync"
-            .Range("Q2").Value = "FALSE"
-            'Call uUpdateTheUpdateCode
-        End If
-    End With
     
     Call mHideSOMEOFTHETHINGS(True, True)
 
