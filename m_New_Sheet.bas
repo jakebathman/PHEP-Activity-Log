@@ -1,4 +1,6 @@
 Attribute VB_Name = "m_New_Sheet"
+'v2
+
 Option Explicit
 
 Public Sub mNewSheet()
@@ -66,6 +68,8 @@ Next i
 If boolSheetDoesntExist Then
     Call fAddSheet(strNewSheetName, strOldSheetName, intYear, intCurPayPeriod)
 End If
+
+Call MaintenanceForAddActivityButton
 
 End Sub
 

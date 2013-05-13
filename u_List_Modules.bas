@@ -1,4 +1,6 @@
 Attribute VB_Name = "u_List_Modules"
+'v2
+
 Option Explicit
 
  Sub uListModules(ByRef arrList(), ByRef intNumMods, ByRef vbActiveProj)

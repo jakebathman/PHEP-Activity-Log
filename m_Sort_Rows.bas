@@ -1,4 +1,6 @@
 Attribute VB_Name = "m_Sort_Rows"
+'v2
+
 Option Explicit
 
 Public Sub mSortRows(intHeaderRow, intTotalsRow)

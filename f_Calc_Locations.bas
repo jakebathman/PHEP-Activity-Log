@@ -1,4 +1,6 @@
 Attribute VB_Name = "f_Calc_Locations"
+'v2
+
 Option Explicit
 
 Public Function fCalcLocations(ByRef intHeaderRow, ByRef intFirstEmptyActRow, ByRef intTotalsRow)

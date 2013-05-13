@@ -1,4 +1,6 @@
 Attribute VB_Name = "m_Add_Activity_Row"
+'v2
+
 Option Explicit
 
 Public Sub mAddActivityRow(strAct$, strDate$, dblTime#, intDateCol%)
@@ -10,6 +12,8 @@ Dim boolActExists As Boolean
 
 strActiveSheetName = ActiveSheet.Name
 intDateCol = intDateCol + 2
+
+Sheets("Refs").Range("P2").Value = strActiveSheetName
 
 Call fCalcLocations(intHeaderRow, intFirstEmptyActRow, intTotalsRow)
 
@@ -78,3 +82,4 @@ Public Function fAddNewLineAndActivity(intRow%, intCol%, dblT#, strA$)
         End With
     Next i
 End Function
+
