@@ -13,9 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-
-
-'v2
+'v3
 
 Public boolEnableEvents As Boolean
 Public boolAddAnother As Boolean

@@ -1,7 +1,6 @@
 Attribute VB_Name = "MAIN"
-'v2
+'v3
 
-'public const arr
 Option Explicit
 
 Public Sub mMain(ByVal a$, ByVal d$, ByVal t#, ByVal c%, Optional boolAddActivityAndAnother As Boolean)

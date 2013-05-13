@@ -7,16 +7,26 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-'v2
+'v3
 
 Option Explicit
 
 Private Sub btnExportSheet_Click()
-    Call MsgBox("Coming soon...", vbOKOnly + vbExclamation, "Hold your horses!")
+    'Call MsgBox("Coming soon...", vbOKOnly + vbExclamation, "Hold your horses!")
+    Call mExportMonthlyReport
 End Sub
 
 Private Sub btnHistory_Click()
+    On Error GoTo errBadSheetName
     Sheets(Sheets("Refs").Range("P2").Value).Activate
+
+Exit Sub
+
+errBadSheetName:
+    frmPickWorkingSheet.lblMainLabel.Caption = "Which sheet are you currently working on?" & vbNewLine & vbNewLine & "I'll try to remember it for next time."
+    frmPickWorkingSheet.Show
+    Sheets(Sheets("Refs").Range("P2").Value).Activate
+    Unload frmPickWorkingSheet
 End Sub
 
 Private Sub btnNewSheet_Click()

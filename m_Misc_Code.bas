@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Misc_Code"
-'v2
+'v3
 
 Option Explicit
 Public Const pthUpdatedWorkbookPath = "\\ccdata01\homeland_security\PHEP Documentation\Monthly Reports\Activity Tracking\"
@@ -21,9 +21,12 @@ Dim sh As Worksheet
     'Sheet4.Visible = xlSheetVeryHidden
 End Sub
 
-Public Sub mHideSOMEOFTHETHINGS(HideRefs As Boolean, HideTemplate As Boolean)
+Public Sub mHideSOMEOFTHETHINGS(HideRefs As Boolean, HideTemplates As Boolean)
     If HideRefs Then Sheet2.Visible = xlSheetVeryHidden 'Refs
-    If HideTemplate Then Sheet4.Visible = xlSheetVeryHidden 'templatesheet
+    If HideTemplates Then
+        Sheet4.Visible = xlSheetVeryHidden 'templatesheet
+        'Sheets("reporttemplatesheet").Visible = xlSheetVeryHidden 'reporttemplatesheet
+    End If
 End Sub
 
 
@@ -238,7 +241,7 @@ Function CopyModule(ByVal iItemNum, _
     Dim VBComp As VBIDE.VBComponent
     Dim FName As String
     Dim CompName As String
-    Dim S As String
+    Dim s As String
     Dim SlashPos As Long
     Dim ExtPos As Long
     Dim TempVBComp As VBIDE.VBComponent
@@ -353,8 +356,8 @@ Function CopyModule(ByVal iItemNum, _
             ' TempVBComp is source module
             With VBComp.CodeModule
                 .DeleteLines 1, .CountOfLines
-                S = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
-                .InsertLines 1, S
+                s = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
+                .InsertLines 1, s
             End With
             On Error GoTo 0
             ToVBProject.VBComponents.Remove TempVBComp
@@ -380,7 +383,7 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
     ' if the VBProject is locked.
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
         Dim N As Long
-        Dim S As String
+        Dim s As String
         Dim LineCount As Long
         
         If VBComp.Collection.Parent.Protection = vbext_pp_locked Then
@@ -390,10 +393,10 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
         
         With VBComp.CodeModule
             For N = 1 To .CountOfLines
-                S = .Lines(N, 1)
-                If Trim(S) = vbNullString Then
+                s = .Lines(N, 1)
+                If Trim(s) = vbNullString Then
                     ' blank line, skip it
-                ElseIf Left(Trim(S), 1) = "'" Then
+                ElseIf Left(Trim(s), 1) = "'" Then
                     ' comment line, skip it
                 Else
                     LineCount = LineCount + 1
