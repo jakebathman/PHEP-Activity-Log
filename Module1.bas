@@ -1,31 +1,32 @@
 Attribute VB_Name = "Module1"
-'v4
-
 Option Explicit
 
-Public Function fChangeLog(ByRef s1 As String, ByRef s2 As String, ByRef s3 As String, ByRef s4 As String)
-    'Takes in three string variables to return the current changelog in sections
-Dim s$
+Sub Macro1()
+Attribute Macro1.VB_ProcData.VB_Invoke_Func = " \n14"
+'
+' Macro1 Macro
+'
 
-'   Version header
-s1 = "Version 4"
+'    ActiveSheet.OLEObjects.Add(ClassType:="Forms.CommandButton.1", Link:=False _
+'        , DisplayAsIcon:=False, Left:=221.875, Top:=330, Width:=286.875, _
+'        Height:=103.75).Select
+        
+Dim Obj As Object
+Dim Code As String
 
-'   New Features
-s2 = s2 & vbTab & "-- " & vbNewLine
-s2 = s2 & vbTab & "-- " & vbNewLine
-s2 = s2 & vbTab & "-- " & vbNewLine
+Sheets("MAIN").Select
 
-'   Bug fixes
-s3 = s3 & vbTab & "-- " & vbNewLine
-s3 = s3 & vbTab & "-- " & vbNewLine
-s3 = s3 & vbTab & "-- " & vbNewLine
-
-'   Known issues
-s4 = s4 & vbTab & "-- " & vbNewLine
-s4 = s4 & vbTab & "-- " & vbNewLine
-s4 = s4 & vbTab & "-- " & vbNewLine
-
-
-
-
-End Function
+'create button
+    Set Obj = ActiveSheet.OLEObjects.Add(ClassType:="Forms.CommandButton.1", Link:=False, DisplayAsIcon:=False, Left:=220, Top:=220, Width:=275, Height:=100)
+    'Set Obj = ActiveSheet.OLEObjects("frmBugButton").Object
+    Obj.Name = "frmBugBtn"
+'button text
+    With ActiveSheet.OLEObjects("frmBugBtn").Object
+        .Caption = ":( " & vbCrLf & vbCrLf & "Something 's Broken" & vbCrLf & "(report a bug)"
+        .BackColor = &HC0&
+        .ForeColor = &HFFFFFF
+        .Font.Size = 14
+        .Font.Bold = True
+    End With
+        
+End Sub

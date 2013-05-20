@@ -58,9 +58,11 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
                 .Range("Q1").Value = "UpdateCodeInSync"
                 .Range("Q2").Value = "FALSE"
                 Call uUpdateTheUpdateCode
+                Call uOneTimeCode
             End If
         End If
     End With
+
     
 
 End Sub
