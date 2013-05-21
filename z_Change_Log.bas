@@ -5,7 +5,7 @@ Option Explicit
 
 Public Function fChangeLog(ByRef s1 As String, ByRef s2 As String, ByRef s3 As String, ByRef s4 As String)
     'Takes in three empty string variables to return (BYREF!) the current changelog in sections
-Dim s$
+Dim S$
 
 '   Version header
 s1 = "Version 4.1"

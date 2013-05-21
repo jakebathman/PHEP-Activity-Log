@@ -226,7 +226,7 @@ Public Sub uUpdateCode()
         Dim tmpComp As VBComponent
         Dim tmpCodeMod As CodeModule
         Dim tmpModName$
-        Dim s
+        Dim S
         Dim TempVBComp As VBComponent
         Dim filepth$
         Dim newfilepth$
@@ -250,8 +250,8 @@ Public Sub uUpdateCode()
 
                 With tmpCodeMod
                     .DeleteLines 1, .CountOfLines
-                    s = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
-                    .InsertLines 1, s
+                    S = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
+                    .InsertLines 1, S
                 End With
                 actWB.VBProject.VBComponents.Remove TempVBComp
 
@@ -449,7 +449,7 @@ Function CopyModule(ByVal iItemNum, _
     Dim VBComp As VBIDE.VBComponent
     Dim FName As String
     Dim CompName As String
-    Dim s As String
+    Dim S As String
     Dim SlashPos As Long
     Dim ExtPos As Long
     Dim TempVBComp As VBIDE.VBComponent
@@ -597,8 +597,8 @@ Function CopyModule(ByVal iItemNum, _
             ' TempVBComp is source module
             With VBComp.CodeModule
                 .DeleteLines 1, .CountOfLines
-                s = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
-                .InsertLines 1, s
+                S = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
+                .InsertLines 1, S
             End With
             On Error GoTo 0
             ToVBProject.VBComponents.Remove TempVBComp
@@ -613,7 +613,7 @@ End Function
 
 Public Sub CountTheLines()
     Dim N As Long
-    Dim s As String
+    Dim S As String
     Dim LineCount As Long
     Dim v
 
@@ -625,10 +625,10 @@ Public Sub CountTheLines()
     For Each v In ThisWorkbook.VBProject.VBComponents
         With v.CodeModule
             For N = 1 To .CountOfLines
-                s = .Lines(N, 1)
-                If Trim(s) = vbNullString Then
+                S = .Lines(N, 1)
+                If Trim(S) = vbNullString Then
                     ' blank line, skip it
-                ElseIf Left(Trim(s), 1) = "'" Then
+                ElseIf Left(Trim(S), 1) = "'" Then
                     ' comment line, skip it
                 Else
                     LineCount = LineCount + 1
@@ -651,7 +651,7 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
 ' if the VBProject is locked.
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Dim N As Long
-    Dim s As String
+    Dim S As String
     Dim LineCount As Long
 
     If VBComp.Collection.Parent.Protection = vbext_pp_locked Then
@@ -661,10 +661,10 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
 
     With VBComp.CodeModule
         For N = 1 To .CountOfLines
-            s = .Lines(N, 1)
-            If Trim(s) = vbNullString Then
+            S = .Lines(N, 1)
+            If Trim(S) = vbNullString Then
                 ' blank line, skip it
-            ElseIf Left(Trim(s), 1) = "'" Then
+            ElseIf Left(Trim(S), 1) = "'" Then
                 ' comment line, skip it
             Else
                 LineCount = LineCount + 1

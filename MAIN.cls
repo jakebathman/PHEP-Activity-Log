@@ -47,9 +47,7 @@ Private Sub CommandButton1_Click()
 
 End Sub
 
-Private Sub frmBugButton_Click()
-    frmBug.Show
-End Sub
+
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
     With Sheets("Refs")
@@ -65,4 +63,7 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
 
     
 
+End Sub
+Private Sub frmBugButton_Click()
+    frmBug.Show
 End Sub

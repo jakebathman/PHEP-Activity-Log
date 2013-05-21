@@ -230,7 +230,7 @@ Public Sub uUpdateTheUpdateCode()
         Dim tmpComp As VBComponent
         Dim tmpCodeMod As CodeModule
         Dim tmpModName$
-        Dim s
+        Dim S
         Dim TempVBComp As VBComponent
         Dim filepth$
         Dim newfilepth$
@@ -254,8 +254,8 @@ Public Sub uUpdateTheUpdateCode()
 
                 With tmpCodeMod
                     .DeleteLines 1, .CountOfLines
-                    s = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
-                    .InsertLines 1, s
+                    S = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
+                    .InsertLines 1, S
                 End With
                 actWB.VBProject.VBComponents.Remove TempVBComp
 
@@ -479,7 +479,7 @@ Function CopyModule(ByVal iItemNum, _
     Dim VBComp As VBIDE.VBComponent
     Dim FName As String
     Dim CompName As String
-    Dim s As String
+    Dim S As String
     Dim SlashPos As Long
     Dim ExtPos As Long
     Dim TempVBComp As VBIDE.VBComponent
@@ -594,8 +594,8 @@ Function CopyModule(ByVal iItemNum, _
             ' TempVBComp is source module
             With VBComp.CodeModule
                 .DeleteLines 1, .CountOfLines
-                s = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
-                .InsertLines 1, s
+                S = TempVBComp.CodeModule.Lines(1, TempVBComp.CodeModule.CountOfLines)
+                .InsertLines 1, S
             End With
             On Error GoTo 0
             ToVBProject.VBComponents.Remove TempVBComp
@@ -621,7 +621,7 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
 ' if the VBProject is locked.
 ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Dim N As Long
-    Dim s As String
+    Dim S As String
     Dim LineCount As Long
 
     If VBComp.Collection.Parent.Protection = vbext_pp_locked Then
@@ -631,10 +631,10 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
 
     With VBComp.CodeModule
         For N = 1 To .CountOfLines
-            s = .Lines(N, 1)
-            If Trim(s) = vbNullString Then
+            S = .Lines(N, 1)
+            If Trim(S) = vbNullString Then
                 ' blank line, skip it
-            ElseIf Left(Trim(s), 1) = "'" Then
+            ElseIf Left(Trim(S), 1) = "'" Then
                 ' comment line, skip it
             Else
                 LineCount = LineCount + 1
@@ -703,15 +703,15 @@ Public Sub ReviseVersionNumberComment() 'Optional sOld, Optional rNew)
 
     On Error GoTo ReviseVersionNumberComment_Error
     Dim v, x, y
-    Dim s$, r$
+    Dim S$, r$
 
     'If sOld = vbNullString Then s = "'v3"
     'If rNew = vbNullString Then r = "'v4.1"
-    s = "'v4"
+    S = "'v4"
     r = "'v4.1"
 
     For Each v In ThisWorkbook.VBProject.VBComponents
-        x = v.CodeModule.Find(s, 1, 1, 2, 5, False, True, False)
+        x = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)
         If x Then
             Call v.CodeModule.ReplaceLine(1, r)
         End If

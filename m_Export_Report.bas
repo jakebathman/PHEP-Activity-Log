@@ -82,7 +82,7 @@ Public Sub mExportSheets(ByVal strSheet1$, Optional ByVal strSheet2$, Optional B
     Dim intLastRow%, i%, intNumSheetsToExport%, intNextRow%
     Dim rngData As Range
     Dim cSheets As New Collection
-    Dim s, v, arr()
+    Dim S, v, arr()
 
     If strSheet2 = vbNullString Then
         intNumSheetsToExport = 1
@@ -102,8 +102,8 @@ Public Sub mExportSheets(ByVal strSheet1$, Optional ByVal strSheet2$, Optional B
     'Sort the sheets
     If cSheets.Count > 1 Then
         ReDim arr(1 To cSheets.Count)
-        For Each s In cSheets
-            arr(i) = s
+        For Each S In cSheets
+            arr(i) = S
             i = i + 1
         Next
         For i = 1 To cSheets.Count
@@ -136,12 +136,12 @@ Public Sub mExportSheets(ByVal strSheet1$, Optional ByVal strSheet2$, Optional B
     intNextRow = 1
 
     'Workbooks(strCurWBName).Sheets(strCurWSName).Activate
-    For Each s In cSheets
+    For Each S In cSheets
         For i = 1 To 50
-            If Workbooks(strAWName).Sheets(s).Cells(i, 1) = "Total:" Then intLastRow = i: Exit For
+            If Workbooks(strAWName).Sheets(S).Cells(i, 1) = "Total:" Then intLastRow = i: Exit For
         Next i
 
-        With Workbooks(strAWName).Sheets(s)
+        With Workbooks(strAWName).Sheets(S)
             Set rngData = .Range(.Cells(5, 1), .Cells(intLastRow, 16))
         End With
 
@@ -208,9 +208,9 @@ End Sub
 
 
 
-Public Function fSetPrintSettings(ByRef s As Worksheet)
+Public Function fSetPrintSettings(ByRef S As Worksheet)
 
-    With s.PageSetup
+    With S.PageSetup
         .Orientation = xlLandscape
         .Zoom = 100
     End With
