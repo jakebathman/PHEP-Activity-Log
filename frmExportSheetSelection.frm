@@ -17,10 +17,6 @@ Attribute VB_Exposed = False
 
 Option Explicit
 
-
-
-
-
 Private Sub btnCancel_Click()
     Unload frmExportSheetSelection
 End Sub
@@ -96,9 +92,9 @@ Private Sub cmbMonths_Change()
     If boolHasExportableStuff = False Then frmExportSheetSelection.lblNothingToExport.Visible = True
 
     With frmExportSheetSelection
-        If .chk1.Visible Then .chk1.Value = True
-        If .chk2.Visible Then .chk2.Value = True
-        If .chk3.Visible Then .chk3.Value = True
+        If .chk1.Visible Then .chk1.Value = True Else .chk1.Value = False
+        If .chk2.Visible Then .chk2.Value = True Else .chk2.Value = False
+        If .chk3.Visible Then .chk3.Value = True Else .chk3.Value = False
     End With
 
 
