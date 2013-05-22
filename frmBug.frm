@@ -59,11 +59,3 @@ Private Sub UserForm_Activate()
     End With
 End Sub
 
-Private Sub UserForm_Click()
-    MsgBox ("Width in points = " & ActiveWindow.Width & Chr(13) & _
-            "Depth in points = " & ActiveWindow.Height & Chr(13) & _
-            "Width in Pixels = " & ActiveWindow.PointsToScreenPixelsX(ActiveWindow.Width) & Chr(13) & _
-            "Depth in Pixels = " & ActiveWindow.PointsToScreenPixelsY(ActiveWindow.Height))
-
-    Me.Label4.Caption = "One point is equal to " & Round(ActiveWindow.PointsToScreenPixelsY(ActiveWindow.Height) / ActiveWindow.Height, 4) & " pixels"
-End Sub
