@@ -17,15 +17,14 @@ Public Sub mShowALLTHETHINGS()
             sh.Visible = xlSheetVisible
         End If
     Next sh
-    'Sheet2.Visible = xlSheetVeryHidden
-    'Sheet4.Visible = xlSheetVeryHidden
+
 End Sub
 
 Public Sub mHideSOMEOFTHETHINGS(HideRefs As Boolean, HideTemplates As Boolean)
     If HideRefs Then Sheet2.Visible = xlSheetVeryHidden    'Refs
     If HideTemplates Then
-        Sheet4.Visible = xlSheetVeryHidden    'templatesheet
-        'Sheets("reporttemplatesheet").Visible = xlSheetVeryHidden 'reporttemplatesheet
+        Sheets("templatesheet").Visible = xlSheetVeryHidden    'templatesheet
+        Sheets("reporttemplatesheet").Visible = xlSheetVeryHidden 'reporttemplatesheet
     End If
 End Sub
 
@@ -133,7 +132,7 @@ Public Sub uUpdateTheUpdateCode()
     boolTriedTwice = False
 
     strVers = Sheets("Refs").Range("L2").Value
-    
+
     On Error GoTo errOtherUpdateErr
 
     Set tVBProj = ActiveWorkbook.VBProject
@@ -151,12 +150,12 @@ Public Sub uUpdateTheUpdateCode()
         Dim app As New Excel.Application
         Dim book As Excel.Workbook
         Set book = app.Workbooks.Open(tFilePathFull)
-        
+
         t = Timer
         While Timer < t + 0.2
             DoEvents
         Wend
-        
+
         Set fVBProj = book.VBProject
 
         Call uListModules(arrListOfNewModules, intNumModules, fVBProj)
@@ -165,7 +164,7 @@ Public Sub uUpdateTheUpdateCode()
         Err.Clear
 
 
-'''''''''''''''     NEW UNTESTED CODE COPIED FROM CODE UPDATE MODULE    ''''''''''''''''''''''''''
+        '''''''''''''''     NEW UNTESTED CODE COPIED FROM CODE UPDATE MODULE    ''''''''''''''''''''''''''
 
         Dim strTmpFldr$, strTmpFldrPath$
         Dim Fs As Object
@@ -189,12 +188,12 @@ Public Sub uUpdateTheUpdateCode()
             If vC.Name = "u_Update_Code" Or vC.Name = "frmWorking" Then
                 v = ExportVBComponent(vC, strActWBFilePath & strTmpFldr, , True)
                 If v <> True Then Call MsgBox("Problem with " & vC.Name & " export :(")
-            t = Timer
-            While Timer < t + 0.1
-                DoEvents
-            Wend
+                t = Timer
+                While Timer < t + 0.1
+                    DoEvents
+                Wend
             End If
-            
+
             c = c + 1
             On Error Resume Next
             Debug.Print Len(tVBProj.VBComponents("frmWorking").Name)
@@ -211,9 +210,9 @@ Public Sub uUpdateTheUpdateCode()
                 Application.StatusBar = "Deleting " & m.Name
                 actWB.VBProject.VBComponents.Remove m
                 On Error Resume Next
-                    actWB.VBProject.VBComponents.Item("u_Update_Code1").Activate
-                    Debug.Print actWB.VBProject.VBComponents.Item("u_Update_Code1").Name
-                    If Err.Number <> 0 Then actWB.VBProject.VBComponents.Remove m
+                actWB.VBProject.VBComponents.Item("u_Update_Code1").Activate
+                Debug.Print actWB.VBProject.VBComponents.Item("u_Update_Code1").Name
+                If Err.Number <> 0 Then actWB.VBProject.VBComponents.Remove m
                 On Error GoTo errOtherUpdateErr
             End If
         Next
@@ -276,14 +275,14 @@ Public Sub uUpdateTheUpdateCode()
 
         v = book.Sheets("Refs").Range("L2").Value
 
-        
+
         book.Close SaveChanges:=False
         Set book = Nothing
         app.Quit
         Set app = Nothing
 
 
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+        '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
         '   Delete the tmpcodemodules folder, now that we're done with it
         Debug.Print "Starting attempt to delete temp folder"
@@ -323,8 +322,8 @@ Public Sub uUpdateTheUpdateCode()
 
     Else
         'Call MsgBox("Looks like you've got the latest version!" & vbNewLine & vbNewLine _
-                  & "This is Version " & strVers & vbNewLine & vbNewLine _
-                  & "It's possible you're not able to access the PHEP drive, which may result in this message.")
+         & "This is Version " & strVers & vbNewLine & vbNewLine _
+         & "It's possible you're not able to access the PHEP drive, which may result in this message.")
     End If
 
     Exit Sub
@@ -362,12 +361,12 @@ Public Function ExportVBComponent(VBComp As VBIDE.VBComponent, _
                                   FolderName As String, _
                                   Optional FileName As String, _
                                   Optional OverwriteExisting As Boolean = True) As Boolean
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' This function exports the code module of a VBComponent to a text
-' file. If FileName is missing, the code will be exported to
-' a file with the same name as the VBComponent followed by the
-' appropriate extension.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' This function exports the code module of a VBComponent to a text
+    ' file. If FileName is missing, the code will be exported to
+    ' a file with the same name as the VBComponent followed by the
+    ' appropriate extension.
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Dim Extension As String
     Dim FName As String
     'Extension = ".txt"
@@ -402,10 +401,10 @@ Public Function ExportVBComponent(VBComp As VBIDE.VBComponent, _
 End Function
 
 Public Function GetFileExtension(VBComp As VBIDE.VBComponent) As String
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' This returns the appropriate file extension based on the Type of
-' the VBComponent.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' This returns the appropriate file extension based on the Type of
+    ' the VBComponent.
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Select Case VBComp.Type
         Case vbext_ct_ClassModule
             GetFileExtension = ".cls"
@@ -451,30 +450,30 @@ Function CopyModule(ByVal iItemNum, _
                     FromVBProject As VBIDE.VBProject, _
                     ToVBProject As VBIDE.VBProject, _
                     OverwriteExisting As Boolean, strPathToWB As String) As Boolean
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' CopyModule
-' This function copies a module from one VBProject to
-' another. It returns True if successful or False
-' if an error occurs.
-'
-' Parameters:
-' --------------------------------
-' FromVBProject         The VBProject that contains the module
-'                       to be copied.
-'
-' ToVBProject           The VBProject into which the module is
-'                       to be copied.
-'
-' CodeModuleName            The name of the module to copy.
-'
-' OverwriteExisting     If True, the VBComponent named CodeModuleName
-'                       in ToVBProject will be removed before
-'                       importing the module. If False and
-'                       a VBComponent named CodeModuleName exists
-'                       in ToVBProject, the code will return
-'                       False.
-'
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' CopyModule
+    ' This function copies a module from one VBProject to
+    ' another. It returns True if successful or False
+    ' if an error occurs.
+    '
+    ' Parameters:
+    ' --------------------------------
+    ' FromVBProject         The VBProject that contains the module
+    '                       to be copied.
+    '
+    ' ToVBProject           The VBProject into which the module is
+    '                       to be copied.
+    '
+    ' CodeModuleName            The name of the module to copy.
+    '
+    ' OverwriteExisting     If True, the VBComponent named CodeModuleName
+    '                       in ToVBProject will be removed before
+    '                       importing the module. If False and
+    '                       a VBComponent named CodeModuleName exists
+    '                       in ToVBProject, the code will return
+    '                       False.
+    '
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     Dim VBComp As VBIDE.VBComponent
     Dim FName As String
@@ -615,11 +614,11 @@ End Function
 
 
 Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' This returns the total number of code lines (excluding blank lines and
-' comment lines) in the VBComponent referenced by VBComp. Returns -1
-' if the VBProject is locked.
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' This returns the total number of code lines (excluding blank lines and
+    ' comment lines) in the VBComponent referenced by VBComp. Returns -1
+    ' if the VBProject is locked.
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Dim N As Long
     Dim S As String
     Dim LineCount As Long
@@ -679,7 +678,7 @@ End Function
 
 
 Sub ListOpenBooks()
-'lists each book that's OPEN
+    'lists each book that's OPEN
     Dim wb As Workbook
 
     For Each wb In Application.Workbooks
@@ -699,10 +698,10 @@ End Sub
 ' Purpose   : Revise the version number comment at the top of every code module
 '---------------------------------------------------------------------------------------
 '
-Public Sub ReviseVersionNumberComment() 'Optional sOld, Optional rNew)
+Public Sub ReviseVersionNumberComment()    'Optional sOld, Optional rNew)
 
     On Error GoTo ReviseVersionNumberComment_Error
-    Dim v, x, y
+    Dim v, X, Y
     Dim S$, r$
 
     'If sOld = vbNullString Then s = "'v3"
@@ -711,8 +710,8 @@ Public Sub ReviseVersionNumberComment() 'Optional sOld, Optional rNew)
     r = "'v4.1"
 
     For Each v In ThisWorkbook.VBProject.VBComponents
-        x = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)
-        If x Then
+        X = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)
+        If X Then
             Call v.CodeModule.ReplaceLine(1, r)
         End If
     Next

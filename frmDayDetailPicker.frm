@@ -20,15 +20,15 @@ Option Explicit
 
 
 Private Sub UserForm_Initialize()
-Dim i%
-For i = 1 To 7
-    With frmDayDetailPicker
-        .Controls("CommandButton" & i).BackColor = &HDBDCF2
-    End With
-Next i
-For i = 8 To 14
-    With frmDayDetailPicker
-        .Controls("CommandButton" & i).BackColor = &HF1D9C5
-    End With
-Next i
+    Dim i%
+    For i = 1 To 7
+        With frmDayDetailPicker
+            .Controls("CommandButton" & i).BackColor = &HDBDCF2
+        End With
+    Next i
+    For i = 8 To 14
+        With frmDayDetailPicker
+            .Controls("CommandButton" & i).BackColor = &HF1D9C5
+        End With
+    Next i
 End Sub

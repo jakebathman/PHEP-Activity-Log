@@ -20,7 +20,7 @@ Private Sub btnHistory_Click()
     On Error GoTo errBadSheetName
     Sheets(Sheets("Refs").Range("P2").Value).Activate
 
-Exit Sub
+    Exit Sub
 
 errBadSheetName:
     frmPickWorkingSheet.lblMainLabel.Caption = "Which sheet are you currently working on?" & vbNewLine & vbNewLine & "I'll try to remember it for next time."
@@ -30,7 +30,7 @@ errBadSheetName:
 End Sub
 
 Private Sub btnNewSheet_Click()
-Call mNewSheet
+    Call mNewSheet
 End Sub
 
 Private Sub btnPrefs_Click()
@@ -61,7 +61,7 @@ Private Sub Worksheet_SelectionChange(ByVal Target As Range)
         End If
     End With
 
-    
+
 
 End Sub
 Private Sub frmBugButton_Click()

@@ -4,56 +4,56 @@ Attribute VB_Name = "m_Add_Activity_Row"
 Option Explicit
 
 Public Sub mAddActivityRow(strAct$, strDate$, dblTime#, intDateCol%)
-Dim i%, j%, c%
-Dim intHeaderRow%, intFirstEmptyActRow%, intTotalsRow%
-Dim intExistingActivityRow%
-Dim strActiveSheetName$
-Dim boolActExists As Boolean
+    Dim i%, j%, c%
+    Dim intHeaderRow%, intFirstEmptyActRow%, intTotalsRow%
+    Dim intExistingActivityRow%
+    Dim strActiveSheetName$
+    Dim boolActExists As Boolean
 
-strActiveSheetName = ActiveSheet.Name
-intDateCol = intDateCol + 2
+    strActiveSheetName = ActiveSheet.Name
+    intDateCol = intDateCol + 2
 
-Sheets("Refs").Range("P2").Value = strActiveSheetName
+    Sheets("Refs").Range("P2").Value = strActiveSheetName
 
-Call fCalcLocations(intHeaderRow, intFirstEmptyActRow, intTotalsRow)
+    Call fCalcLocations(intHeaderRow, intFirstEmptyActRow, intTotalsRow)
 
-If intTotalsRow < intFirstEmptyActRow Or intFirstEmptyActRow = 0 Then
-    Rows(intTotalsRow).Insert
-    intFirstEmptyActRow = intTotalsRow
-    intTotalsRow = intTotalsRow + 1
-End If
-
-
-
-'Check for existing row for activity
-
-For i = intHeaderRow + 1 To intTotalsRow - 1
-    If Cells(i, 1).Value = strAct Then
-        boolActExists = True
-        intExistingActivityRow = i
-        Exit For
+    If intTotalsRow < intFirstEmptyActRow Or intFirstEmptyActRow = 0 Then
+        Rows(intTotalsRow).Insert
+        intFirstEmptyActRow = intTotalsRow
+        intTotalsRow = intTotalsRow + 1
     End If
-Next i
 
-If intExistingActivityRow = 0 Then intExistingActivityRow = 500
-If boolActExists And Cells(intExistingActivityRow, intDateCol).Value > 0 Then
-    Select Case MsgBox("Whoops!" & vbNewLine & vbNewLine & "There's already a value for that activity & date. " _
-        & "Add the two together?", vbYesNoCancel, "Activity exists on that date!")
-        Case vbYes
-            Call fAddNewLineAndActivity(intExistingActivityRow, intDateCol, Cells(intExistingActivityRow, intDateCol).Value + dblTime, strAct)
-            Rows(intTotalsRow - 1).Delete
-            intTotalsRow = intTotalsRow - 1
-        Case vbNo
-            Call fAddNewLineAndActivity(intFirstEmptyActRow, intDateCol, dblTime, strAct)
-        Case Else
-            End
-    End Select
-ElseIf boolActExists Then
-    Rows(intFirstEmptyActRow).Delete
-    Call fAddNewLineAndActivity(intExistingActivityRow, intDateCol, dblTime, strAct)
-Else
-    Call fAddNewLineAndActivity(intFirstEmptyActRow, intDateCol, dblTime, strAct)
-End If
+
+
+    'Check for existing row for activity
+
+    For i = intHeaderRow + 1 To intTotalsRow - 1
+        If Cells(i, 1).Value = strAct Then
+            boolActExists = True
+            intExistingActivityRow = i
+            Exit For
+        End If
+    Next i
+
+    If intExistingActivityRow = 0 Then intExistingActivityRow = 500
+    If boolActExists And Cells(intExistingActivityRow, intDateCol).Value > 0 Then
+        Select Case MsgBox("Whoops!" & vbNewLine & vbNewLine & "There's already a value for that activity & date. " _
+                         & "Add the two together?", vbYesNoCancel, "Activity exists on that date!")
+            Case vbYes
+                Call fAddNewLineAndActivity(intExistingActivityRow, intDateCol, Cells(intExistingActivityRow, intDateCol).Value + dblTime, strAct)
+                Rows(intTotalsRow - 1).Delete
+                intTotalsRow = intTotalsRow - 1
+            Case vbNo
+                Call fAddNewLineAndActivity(intFirstEmptyActRow, intDateCol, dblTime, strAct)
+            Case Else
+                End
+        End Select
+    ElseIf boolActExists Then
+        Rows(intFirstEmptyActRow).Delete
+        Call fAddNewLineAndActivity(intExistingActivityRow, intDateCol, dblTime, strAct)
+    Else
+        Call fAddNewLineAndActivity(intFirstEmptyActRow, intDateCol, dblTime, strAct)
+    End If
 
 End Sub
 
@@ -93,7 +93,7 @@ Public Sub mUpdateHourLabels()
                     strHrs = Format(dblHrs, "#0.00")
                     If dblHrs = 1 Then strHrs = strHrs & " hour" Else strHrs = strHrs & " hours"
                     .lblDayTotalHours = "This day's current total is " & strHrs
-                    
+
                     dblHrsToEight = 8 - dblHrs
                     strHrsToEight = Format(dblHrsToEight, "#0.00")
                     If dblHrsToEight = 1 Then strHrsToEight = strHrsToEight & " hour" Else strHrsToEight = strHrsToEight & " hours"

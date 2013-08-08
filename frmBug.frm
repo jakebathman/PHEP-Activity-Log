@@ -26,7 +26,7 @@ Private Sub btnEmailJake_Click()
 End Sub
 
 Private Sub btnSubmitBug_Click()
-    ThisWorkbook.FollowHyperlink "https://code.google.com/p/phep-activity-log/issues/entry?template=Defect%20report%20from%20user"
+    ThisWorkbook.FollowHyperlink "https://github.com/jakebathman/PHEP-Activity-Log/issues/new"
     Unload Me
 End Sub
 

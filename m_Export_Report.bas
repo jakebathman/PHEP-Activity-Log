@@ -118,6 +118,7 @@ Public Sub mExportSheets(ByVal strSheet1$, Optional ByVal strSheet2$, Optional B
 
     If ThisWorkbook.Sheets("Refs").Range("N2").Value = vbNullString Then
         strEmpName = Trim(StrConv(InputBox("Sorry, I don't know who you are!" & vbNewLine & vbNewLine & "Please enter your full name.", "Who are you?!"), vbProperCase))
+        If strEmpName = vbNullString Then Exit Sub
         ThisWorkbook.Sheets("Refs").Range("N2").Value = strEmpName
     Else
         strEmpName = ThisWorkbook.Sheets("Refs").Range("N2").Value

@@ -58,7 +58,7 @@ Public Sub mFormulas(ByVal intTotRow%, ByVal intHeadRow%)
     Set rngRight = Range(Cells(intHeadRow + 1, 16), Cells(intTotRow - 1, 16))
     Set rngSuperTot = Range(Cells(intTotRow, 16).Address)
     Set rngWeekendDays = Range(Range(Cells(intTotRow, 7), Cells(intTotRow, 8)).Address(False, False) & "," & Range(Cells(intTotRow, 14), Cells(intTotRow, 15)).Address(False, False))
-    
+
     Call fSetFormatConditions(rngBottom, "=8", True)
     Call fSetFormatConditions(rngRight, "=80", False)
     Call fSetFormatConditions(rngSuperTot, "=80", True)

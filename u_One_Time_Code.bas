@@ -4,25 +4,33 @@ Option Explicit
 Public Sub uOneTimeCode()
 
 
-    ' Patch to add Bug Report button on MAIN sheet
-    ' Patch v4.2.1
+
 
 
     ' Check if the patch is installed first
-    Dim i%, j%
+    Dim i%, j%, intLastColOfRefs%, intPatchesCol%
     With ThisWorkbook.Sheets("Refs")
-    ' Find the correct column
-    For j = 1 To 200
-        If StrComp("PatchesInstalled", .Cells(1, j).Value, vbTextCompare) = 0 Then Exit For
-    Next j
+        ' Find the correct column
+        For j = 1 To 200
+            If StrComp("PatchesInstalled", .Cells(1, j).Value, vbTextCompare) = 0 Then intPatchesCol = j: Exit For
+            If .Cells(1, j).Value = vbNullString And .Cells(1, j + 1).Value = vbNullString Then intLastColOfRefs = j - 1: Exit For
+        Next j
+        If intLastColOfRefs > 0 Then
+            .Cells(1, intLastColOfRefs + 1).Value = "PatchesInstalled"
+            intPatchesCol = intLastColOfRefs
+        End If
         For i = 2 To 100
-            If .Cells(i, j).Value = "v4.2.1" Then
+            If .Cells(i, intPatchesCol).Value = "v4.2.1" Then
                 Exit Sub
             End If
         Next i
     End With
 
 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'   Patch v4.2.1                                        '
+'   Adds Bug Report button on MAIN sheet                '
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Dim Obj As Object
     Dim Code As String
     Dim shMainSheet As Worksheet
@@ -67,7 +75,7 @@ Public Sub uOneTimeCode()
 
         LineNum = CodeMod.CountOfLines + 1
         S = "Private Sub frmBugButton_Click()" & vbCrLf & _
-          "    frmBug.Show" & vbCrLf & _
+            "    frmBug.Show" & vbCrLf & _
             "End Sub"
         CodeMod.InsertLines LineNum, S
     End If
@@ -75,8 +83,8 @@ Public Sub uOneTimeCode()
     ' note that the patch is installed, so this doesn't keep running
     With ThisWorkbook.Sheets("Refs")
         For i = 2 To 100
-            If .Cells(i, j).Value = vbNullString Then
-                .Cells(i, j).Value = "v4.2.1"
+            If .Cells(i, intPatchesCol).Value = vbNullString Then
+                .Cells(i, intPatchesCol).Value = "v4.2.1"
                 Exit For
             End If
         Next i

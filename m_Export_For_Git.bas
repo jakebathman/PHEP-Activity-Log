@@ -20,7 +20,7 @@ Public Sub ExportForGit()
         'Wend
         c = c + 1
     Next
-    
+
     Application.ActiveWorkbook.SaveCopyAs "C:\Users\e008922\Dropbox\_Git\PHEP-Activity-Log\PHEP Activity Log.xlsm"
 
 End Sub

@@ -30,9 +30,9 @@ End Sub
 
 Private Sub UserForm_Activate()
     With frmPickWorkingSheet
-      .StartUpPosition = 0
-      .Left = Application.Left + (0.5 * Application.Width) - (0.5 * .Width)
-      .Top = Application.Top + (0.5 * Application.Height) - (0.5 * .Height)
+        .StartUpPosition = 0
+        .Left = Application.Left + (0.5 * Application.Width) - (0.5 * .Width)
+        .Top = Application.Top + (0.5 * Application.Height) - (0.5 * .Height)
     End With
 End Sub
 
@@ -40,7 +40,7 @@ Private Sub UserForm_Initialize()
     Dim i%
     Dim v
     Dim arrSheets()
-    
+
     i = 1
     For Each v In ThisWorkbook.Sheets
         If Left(v.Name, 3) Like "FY1" Then
@@ -49,7 +49,7 @@ Private Sub UserForm_Initialize()
             i = i + 1
         End If
     Next
-    
+
     If QSortInPlace(arrSheets, -1, -1, True, vbTextCompare, False) = True Then
         For i = 1 To UBound(arrSheets)
             frmPickWorkingSheet.cmbSheets.AddItem (arrSheets(i))

@@ -29,7 +29,7 @@ Public Sub uUpdateCode()
 
     Dim boolServerFileIsDifferent As Boolean
     Dim boolChangesToUpdateCode As Boolean
-    
+
     boolChangesToUpdateCode = True
 
 
@@ -421,30 +421,30 @@ Function CopyModule(ByVal iItemNum, _
                     FromVBProject As VBIDE.VBProject, _
                     ToVBProject As VBIDE.VBProject, _
                     OverwriteExisting As Boolean, strPathToWB As String) As Boolean
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' CopyModule
-' This function copies a module from one VBProject to
-' another. It returns True if successful or False
-' if an error occurs.
-'
-' Parameters:
-' --------------------------------
-' FromVBProject         The VBProject that contains the module
-'                       to be copied.
-'
-' ToVBProject           The VBProject into which the module is
-'                       to be copied.
-'
-' CodeModuleName            The name of the module to copy.
-'
-' OverwriteExisting     If True, the VBComponent named CodeModuleName
-'                       in ToVBProject will be removed before
-'                       importing the module. If False and
-'                       a VBComponent named CodeModuleName exists
-'                       in ToVBProject, the code will return
-'                       False.
-'
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' CopyModule
+    ' This function copies a module from one VBProject to
+    ' another. It returns True if successful or False
+    ' if an error occurs.
+    '
+    ' Parameters:
+    ' --------------------------------
+    ' FromVBProject         The VBProject that contains the module
+    '                       to be copied.
+    '
+    ' ToVBProject           The VBProject into which the module is
+    '                       to be copied.
+    '
+    ' CodeModuleName            The name of the module to copy.
+    '
+    ' OverwriteExisting     If True, the VBComponent named CodeModuleName
+    '                       in ToVBProject will be removed before
+    '                       importing the module. If False and
+    '                       a VBComponent named CodeModuleName exists
+    '                       in ToVBProject, the code will return
+    '                       False.
+    '
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
     Dim VBComp As VBIDE.VBComponent
     Dim FName As String
@@ -645,11 +645,11 @@ End Sub
 
 
 Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' This returns the total number of code lines (excluding blank lines and
-' comment lines) in the VBComponent referenced by VBComp. Returns -1
-' if the VBProject is locked.
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' This returns the total number of code lines (excluding blank lines and
+    ' comment lines) in the VBComponent referenced by VBComp. Returns -1
+    ' if the VBProject is locked.
+    ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Dim N As Long
     Dim S As String
     Dim LineCount As Long
@@ -692,12 +692,12 @@ End Function
 
 
 Public Function fCompareArrays(ByRef arrOld, ByRef arrNew) As Boolean
-' Takes two arrays as input, spits out boolean TRUE if all elements of arrOld are found in arrNew
-' Returning TRUE indicates no data was lost during an external operation on the items in the array
+    ' Takes two arrays as input, spits out boolean TRUE if all elements of arrOld are found in arrNew
+    ' Returning TRUE indicates no data was lost during an external operation on the items in the array
 
     Dim i%, c%, intDiff%
     Dim boolTmp As Boolean
-    Dim v, x
+    Dim v, X
     Dim aO(), aN()
 
     ReDim aO(1 To UBound(arrOld))
@@ -713,9 +713,9 @@ Public Function fCompareArrays(ByRef arrOld, ByRef arrNew) As Boolean
 
     For Each v In aO
         boolTmp = False
-        For Each x In aN
-            Debug.Print "Checking " & v & " against " & x
-            If StrComp(v, x, vbTextCompare) = 0 Then boolTmp = True: Exit For
+        For Each X In aN
+            Debug.Print "Checking " & v & " against " & X
+            If StrComp(v, X, vbTextCompare) = 0 Then boolTmp = True: Exit For
         Next
         If Not boolTmp Then intDiff = intDiff + 1: Debug.Print "intDiff Changed...now it's " & intDiff
     Next
@@ -1002,12 +1002,12 @@ Public Function ExportVBComponent(VBComp As VBIDE.VBComponent, _
                                   FolderName As String, _
                                   Optional FileName As String, _
                                   Optional OverwriteExisting As Boolean = True) As Boolean
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' This function exports the code module of a VBComponent to a text
-' file. If FileName is missing, the code will be exported to
-' a file with the same name as the VBComponent followed by the
-' appropriate extension.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' This function exports the code module of a VBComponent to a text
+    ' file. If FileName is missing, the code will be exported to
+    ' a file with the same name as the VBComponent followed by the
+    ' appropriate extension.
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Dim Extension As String
     Dim FName As String
     'Extension = ".txt"
@@ -1042,10 +1042,10 @@ Public Function ExportVBComponent(VBComp As VBIDE.VBComponent, _
 End Function
 
 Public Function GetFileExtension(VBComp As VBIDE.VBComponent) As String
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-' This returns the appropriate file extension based on the Type of
-' the VBComponent.
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+    ' This returns the appropriate file extension based on the Type of
+    ' the VBComponent.
+    '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     Select Case VBComp.Type
         Case vbext_ct_ClassModule
             GetFileExtension = ".cls"
