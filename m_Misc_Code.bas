@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Misc_Code"
-'v4.1
+'v4.2
 
 Option Explicit
 Public Const pthUpdatedWorkbookPath = "\\ccdata01\homeland_security\PHEP Documentation\Monthly Reports\Activity Tracking\"
@@ -704,10 +704,10 @@ Public Sub ReviseVersionNumberComment()    'Optional sOld, Optional rNew)
     Dim v, X, Y
     Dim S$, r$
 
-    'If sOld = vbNullString Then s = "'v3"
-    'If rNew = vbNullString Then r = "'v4.1"
-    S = "'v4"
-    r = "'v4.1"
+    'If sOld = vbNullString Then s = "'v4.1"
+    'If rNew = vbNullString Then r = "'v4.2"
+    S = "'v4.1"
+    r = "'v4.2"
 
     For Each v In ThisWorkbook.VBProject.VBComponents
         X = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)

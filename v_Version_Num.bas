@@ -1,5 +1,5 @@
 Attribute VB_Name = "v_Version_Num"
-'v4.1
+'v4.2
 
 Option Explicit
 
