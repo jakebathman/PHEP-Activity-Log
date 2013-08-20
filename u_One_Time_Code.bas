@@ -216,7 +216,7 @@ strLogFilePathAndName = ActiveWorkbook.Path & "\" & "ErrorLog.txt"
     ' Loop down the column, changing all formulas to the new one
     For i = 2 To 200
         If shtRefs.Cells(i, intFYColumn).Value = vbNullString Then Exit For
-        shtRefs.Cells(i, intFYColumn).FormulaR1C1 = "=IF(RC[-2]<=DATE(2012,9,1),2012,IF(RC[-2]<=DATE(2013,9,1),2013,IF(RC[-2]<=DATE(2014,9,1),2014,IF(RC[-2]<=DATE(2015,9,1),2015,2016))))"
+        shtRefs.Cells(i, intFYColumn).FormulaR1C1 = "=IF(RC[-3]<DATE(2012,9,1),2012,IF(RC[-3]<DATE(2013,9,1),2013,IF(RC[-3]<DATE(2014,9,1),2014,IF(RC[-3]<DATE(2015,9,1),2015,2016))))"
     Next i
 
     ' LOG
