@@ -43,9 +43,6 @@ Private Sub btnUpdateCode_Click()
     End If
 End Sub
 
-Private Sub CommandButton1_Click()
-
-End Sub
 
 
 

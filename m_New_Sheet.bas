@@ -67,7 +67,8 @@ Public Sub mNewSheet()
     Next i
 
     If boolSheetDoesntExist Then
-        Call fAddSheet(strNewSheetName, strOldSheetName, intYear, intCurPayPeriod)
+        'Call fAddSheet(strNewSheetName, strOldSheetName, intYear, intCurPayPeriod)
+        Call fAddSheet(strNewSheetName, "MAIN", intYear, intCurPayPeriod)
     End If
 
     Call MaintenanceForAddActivityButton
