@@ -40,7 +40,7 @@ Private Sub cmbMonths_Change()
 
     Dim arrSheets(), arrPeriodsAndMonth()
     Dim i%, m%, j%
-    Dim v, X, Y, z
+    Dim v, x, Y, z
     Dim boolHasExportableStuff As Boolean
 
     'If Not frmExportSheetSelection.Visible Then Exit Sub
@@ -76,7 +76,7 @@ Private Sub cmbMonths_Change()
     boolHasExportableStuff = False
     For j = 1 To 3
         v = arrPeriodsAndMonth(m, j, 2)    'Month Name
-        X = arrPeriodsAndMonth(m, j, 1)    'Period (sheet) name
+        x = arrPeriodsAndMonth(m, j, 1)    'Period (sheet) name
         Y = arrPeriodsAndMonth(m, j, 3)    'Period start date
         z = arrPeriodsAndMonth(m, j, 4)    'Period end date
         If v <> vbNullString Then
@@ -84,7 +84,7 @@ Private Sub cmbMonths_Change()
                 boolHasExportableStuff = True
                 Y = MonthName(Month(Y), True) & " " & Day(Y)
                 z = MonthName(Month(z), True) & " " & Day(z)
-                frmExportSheetSelection.Controls("chk" & j).Caption = X & " (" & Y & " to " & z & ")"
+                frmExportSheetSelection.Controls("chk" & j).Caption = x & " (" & Y & " to " & z & ")"
                 frmExportSheetSelection.Controls("chk" & j).Visible = True
             End If
         End If

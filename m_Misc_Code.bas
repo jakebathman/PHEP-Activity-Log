@@ -109,6 +109,7 @@ Public Sub uUpdateTheUpdateCode()
     Dim intCurVersion%, dblCurVersion#
     Dim intNewVersion%, dblNewVersion#
     Dim strFileNameExtras$
+    Dim strLogFilePathAndName$
 
     Dim boolServerFileIsDifferent As Boolean
 
@@ -122,13 +123,21 @@ Public Sub uUpdateTheUpdateCode()
     Set actWB = actApp.ActiveWorkbook
     Set actWS = actWB.ActiveSheet
     actWB.Save
+    t = Timer
+    While Timer < t + 2
+        DoEvents
+    Wend
     strActWBFileName = actWB.Name
     strActWBFilePath = actWB.Path
     strActWBFullPath = strActWBFilePath & "\" & strActWBFileName
+    strLogFilePathAndName = strActWBFilePath & "\" & "ErrorLog.txt"
     strActWBBackupPath = strActWBFilePath & "\OLD_" & strActWBFileName
     strActWBFileTitle = Replace(strActWBFileName, ".xlsm", "", Compare:=vbTextCompare)
     strFileNameConventionInside = "PHEP activity log v"
-
+    t = Timer
+    While Timer < t + 0.2
+        DoEvents
+    Wend
     boolTriedTwice = False
 
     strVers = Sheets("Refs").Range("L2").Value
@@ -197,7 +206,7 @@ Public Sub uUpdateTheUpdateCode()
             c = c + 1
             On Error Resume Next
             Debug.Print Len(tVBProj.VBComponents("frmWorking").Name)
-            If Err.Number = 0 Then Call UpdateProgressBar(" ", (c / fVBProj.VBComponents.Count) * 100): Err.Clear
+            'If Err.Number = 0 Then Call UpdateProgressBar(" ", (c / fVBProj.VBComponents.Count) * 100): Err.Clear
             On Error GoTo errOtherUpdateErr
         Next
 
@@ -236,6 +245,9 @@ Public Sub uUpdateTheUpdateCode()
         Dim ModName$
 
         file = Dir(strActWBFilePath & strTmpFldr & "\")
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "File = " & file: Close #1
+
         While (file <> "")
             filepth = strActWBFilePath & strTmpFldr & "\" & file
             Debug.Print c & ": " & file
@@ -264,7 +276,7 @@ Public Sub uUpdateTheUpdateCode()
             End If
             If InStr(1, file, ".frx", vbTextCompare) > 0 Then intNumNewModules = intNumNewModules - 1
             On Error GoTo errOtherUpdateErr
-            'Call UpdateProgressBar(" ", (c / intNumNewModules) * 100):
+
             t = Timer
             While Timer < t + 0.05
                 DoEvents
@@ -275,14 +287,24 @@ Public Sub uUpdateTheUpdateCode()
 
         v = book.Sheets("Refs").Range("L2").Value
 
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Done inserting new modules": Close #1
 
         book.Close SaveChanges:=False
         Set book = Nothing
         app.Quit
         Set app = Nothing
 
+        t = Timer
+        While Timer < t + 1
+            DoEvents
+        Wend
 
         '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Starting to delete the tmpcodemodules folder": Close #1
+
 
         '   Delete the tmpcodemodules folder, now that we're done with it
         Debug.Print "Starting attempt to delete temp folder"
@@ -297,13 +319,30 @@ Public Sub uUpdateTheUpdateCode()
             Debug.Print "Finished deleting Fs"
         End If
 
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Done deleting the tmpcodemodules folder": Close #1
+
+        t = Timer
+        While Timer < t + 0.5
+            DoEvents
+        Wend
+
+
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Starting to delete any class modules": Close #1
+
 
         'Pesky class modules shouldn't hang around
         For Each vC In tVBProj.VBComponents
             If vC.Type = vbext_ct_ClassModule Then tVBProj.VBComponents.Remove vC
         Next
+        t = Timer
+        While Timer < t + 0.5
+            DoEvents
+        Wend
 
-
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Now changing the UpdateCodeVersion values in Refs sheet": Close #1
 
 
 
@@ -311,24 +350,39 @@ Public Sub uUpdateTheUpdateCode()
         'v = TotalCodeLinesInVBComponent(tVBProj.VBComponents("v_Version_Num")) - 3
         'Debug.Print v
         strVersNew = CStr(v)
-        Sheets("Refs").Range("R1").Value = "UpdateCodeVersion"
-        Sheets("Refs").Range("R2").Value = strVersNew
         Sheets("Refs").Range("Q2").Value = "TRUE"
+        Sheets("Refs").Range("Q3").Value = "UpdateCodeVersion"
+        Sheets("Refs").Range("Q4").Value = strVersNew
+        t = Timer
+        While Timer < t + 0.5
+            DoEvents
+        Wend
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Done changing the UpdateCodeVersion values in Refs sheet": Close #1
 
-        'Call MsgBox("Update to the updating code complete!!" & vbNewLine & vbNewLine _
-         & "This is Version " & strVersNew & " of this tool." & vbNewLine & vbNewLine _
-         & " ")
-        Application.StatusBar = "Update code had to be completed (seriously). It's done!"
 
-    Else
-        'Call MsgBox("Looks like you've got the latest version!" & vbNewLine & vbNewLine _
-         & "This is Version " & strVers & vbNewLine & vbNewLine _
-         & "It's possible you're not able to access the PHEP drive, which may result in this message.")
+        Application.StatusBar = False
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Status bar is now false": Close #1
+        t = Timer
+        While Timer < t + 0.5
+            DoEvents
+        Wend
+
+        ' LOG
+        Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "About to call msgbox": Close #1
+
+        Call MsgBox("Update code had to be completed (seriously). It's done!")
+
     End If
-
+    ' LOG
+    Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "About to exit sub": Close #1
+    Kill strLogFilePathAndName
     Exit Sub
 
 errCouldntListDir:
+    ' LOG
+    Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Inside errCouldntListDir": Close #1
     If Not boolTriedTwice Then
         If MsgBox("Looks like something went wront trying to access the updated code. You may not be able to connect to the PHEP drive." & vbNewLine & vbNewLine _
                 & "Try Again?", vbYesNo, "I can't connect! :(") = vbYes Then
@@ -343,6 +397,8 @@ errCouldntListDir:
 
 
 errOtherUpdateErr:
+    ' LOG
+    Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Inside errOtherUpdateErr": Close #1
     On Error Resume Next
     book.Close SaveChanges:=False
     Set book = Nothing
@@ -701,7 +757,7 @@ End Sub
 Public Sub ReviseVersionNumberComment()    'Optional sOld, Optional rNew)
 
     On Error GoTo ReviseVersionNumberComment_Error
-    Dim v, X, Y
+    Dim v, x, Y
     Dim S$, r$
 
     'If sOld = vbNullString Then s = "'v4.1"
@@ -710,8 +766,8 @@ Public Sub ReviseVersionNumberComment()    'Optional sOld, Optional rNew)
     r = "'v4.2"
 
     For Each v In ThisWorkbook.VBProject.VBComponents
-        X = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)
-        If X Then
+        x = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)
+        If x Then
             Call v.CodeModule.ReplaceLine(1, r)
         End If
     Next
@@ -723,6 +779,8 @@ ReviseVersionNumberComment_Error:
 
     MsgBox "Error " & Err.Number & " (" & Err.Description & ") in procedure ReviseVersionNumberComment of Module m_Misc_Code"
 End Sub
+
+
 
 
 

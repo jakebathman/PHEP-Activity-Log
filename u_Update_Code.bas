@@ -697,7 +697,7 @@ Public Function fCompareArrays(ByRef arrOld, ByRef arrNew) As Boolean
 
     Dim i%, c%, intDiff%
     Dim boolTmp As Boolean
-    Dim v, X
+    Dim v, x
     Dim aO(), aN()
 
     ReDim aO(1 To UBound(arrOld))
@@ -713,9 +713,9 @@ Public Function fCompareArrays(ByRef arrOld, ByRef arrNew) As Boolean
 
     For Each v In aO
         boolTmp = False
-        For Each X In aN
-            Debug.Print "Checking " & v & " against " & X
-            If StrComp(v, X, vbTextCompare) = 0 Then boolTmp = True: Exit For
+        For Each x In aN
+            Debug.Print "Checking " & v & " against " & x
+            If StrComp(v, x, vbTextCompare) = 0 Then boolTmp = True: Exit For
         Next
         If Not boolTmp Then intDiff = intDiff + 1: Debug.Print "intDiff Changed...now it's " & intDiff
     Next

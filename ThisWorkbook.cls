@@ -11,15 +11,3 @@ Attribute VB_Exposed = True
 
 Option Explicit
 
-Private Sub Workbook_Open()
-    With Sheets("Refs")
-        If .Range("Q2").Value = "FALSE" Or .Range("Q2").Value = False Or .Range("Q2").Value = vbNullString Then
-            If MsgBox("Some back-end code needs to be udpated. You should do that soon. How about now?", vbYesNo + vbExclamation) = vbYes Then
-                .Range("Q1").Value = "UpdateCodeInSync"
-                .Range("Q2").Value = "FALSE"
-                Call uUpdateTheUpdateCode
-                Call uOneTimeCode
-            End If
-        End If
-    End With
-End Sub

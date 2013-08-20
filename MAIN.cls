@@ -12,7 +12,6 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Private Sub btnExportSheet_Click()
-    'Call MsgBox("Coming soon...", vbOKOnly + vbExclamation, "Hold your horses!")
     Call mExportMonthlyReport
 End Sub
 
@@ -46,14 +45,27 @@ End Sub
 
 
 
+Private Sub Worksheet_Activate()
+    With Sheets("Refs")
+        If .Range("Q2").Value = "FALSE" Or .Range("Q2").Value = False Or .Range("Q2").Value = vbNullString Then
+            If MsgBox("Some back-end code needs to be udpated. You should do that soon. How about now?", vbYesNo + vbExclamation) = vbYes Then
+                .Range("Q1").Value = "UpdateCodeInSync"
+                .Range("Q2").Value = "FALSE"
+                Call uOneTimeCode
+                Call uUpdateTheUpdateCode
+            End If
+        End If
+    End With
+End Sub
+
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
     With Sheets("Refs")
         If .Range("Q2").Value = "FALSE" Or .Range("Q2").Value = False Or .Range("Q2").Value = vbNullString Then
             If MsgBox("Some back-end code needs to be udpated. You should do that soon. How about now?", vbYesNo + vbExclamation) = vbYes Then
                 .Range("Q1").Value = "UpdateCodeInSync"
                 .Range("Q2").Value = "FALSE"
-                Call uUpdateTheUpdateCode
                 Call uOneTimeCode
+                Call uUpdateTheUpdateCode
             End If
         End If
     End With
