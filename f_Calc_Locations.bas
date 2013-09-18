@@ -1,5 +1,5 @@
 Attribute VB_Name = "f_Calc_Locations"
-'v4.2
+'v4.2.1
 
 Option Explicit
 

@@ -1,4 +1,6 @@
 Attribute VB_Name = "m_Export_For_Git"
+'v4.2.1
+
 Option Explicit
 
 Public Sub ExportForGit()

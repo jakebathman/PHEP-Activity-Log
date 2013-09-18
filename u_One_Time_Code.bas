@@ -30,7 +30,8 @@ Public Sub uOneTimeCode()
         End If
     End With
 
-
+    ' Force patches to re-install
+    ThisWorkbook.Sheets("Refs").Range(Cells(2, intPatchCol), Cells(5, intPatchCol)).Value = vbNullString
 
 
 
@@ -53,9 +54,9 @@ End Sub
 
 
 Private Sub patch4_2_1(intPatchesCol As Integer)
-Dim strLogFilePathAndName
+    Dim strLogFilePathAndName
 
-strLogFilePathAndName = ActiveWorkbook.Path & "\" & "ErrorLog.txt"
+    strLogFilePathAndName = ActiveWorkbook.Path & "\" & "ErrorLog.txt"
 
     ' LOG
     Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Starting patch v4.2.1": Close #1
@@ -165,14 +166,14 @@ strLogFilePathAndName = ActiveWorkbook.Path & "\" & "ErrorLog.txt"
     ' LOG
     Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Patch v4.2.1 complete": Close #1
 
-    
+
 
 End Sub
 
 Private Sub patch4_2_2(intPatchesCol As Integer)
-Dim strLogFilePathAndName
+    Dim strLogFilePathAndName
 
-strLogFilePathAndName = ActiveWorkbook.Path & "\" & "ErrorLog.txt"
+    strLogFilePathAndName = ActiveWorkbook.Path & "\" & "ErrorLog.txt"
     ' LOG
     Open strLogFilePathAndName For Append As #1: Print #1, " ": Close #1
 
@@ -180,7 +181,7 @@ strLogFilePathAndName = ActiveWorkbook.Path & "\" & "ErrorLog.txt"
     ' Check if the patch is installed first
     Dim i%, j%, intLastColOfRefs%
     Dim shtRefs As Worksheet
-    
+
     ' LOG
     Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "Starting patch v4.2.2": Close #1
 

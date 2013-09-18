@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Misc_Code"
-'v4.2
+'v4.2.1
 
 Option Explicit
 Public Const pthUpdatedWorkbookPath = "\\ccdata01\homeland_security\PHEP Documentation\Monthly Reports\Activity Tracking\"
@@ -23,8 +23,10 @@ End Sub
 Public Sub mHideSOMEOFTHETHINGS(HideRefs As Boolean, HideTemplates As Boolean)
     If HideRefs Then Sheet2.Visible = xlSheetVeryHidden    'Refs
     If HideTemplates Then
+        On Error Resume Next
         Sheets("templatesheet").Visible = xlSheetVeryHidden    'templatesheet
-        Sheets("reporttemplatesheet").Visible = xlSheetVeryHidden 'reporttemplatesheet
+        Sheets("reporttemplatesheet").Visible = xlSheetVeryHidden    'reporttemplatesheet
+        On Error GoTo 0
     End If
 End Sub
 
@@ -762,8 +764,8 @@ Public Sub ReviseVersionNumberComment()    'Optional sOld, Optional rNew)
 
     'If sOld = vbNullString Then s = "'v4.1"
     'If rNew = vbNullString Then r = "'v4.2"
-    S = "'v4.1"
-    r = "'v4.2"
+    S = "'v4.2"
+    r = "'v4.2.1"
 
     For Each v In ThisWorkbook.VBProject.VBComponents
         x = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)
