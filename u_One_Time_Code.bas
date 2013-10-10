@@ -31,12 +31,11 @@ Public Sub uOneTimeCode()
     End With
 
     ' Force patches to re-install
-    ThisWorkbook.Sheets("Refs").Range(Cells(2, intPatchCol), Cells(5, intPatchCol)).Value = vbNullString
-
-
-
-
-
+    Sheets("Refs").Cells(2, intPatchCol) = vbNullString
+    Sheets("Refs").Cells(3, intPatchCol) = vbNullString
+    Sheets("Refs").Cells(4, intPatchCol) = vbNullString
+    Sheets("Refs").Cells(5, intPatchCol) = vbNullString
+    Sheets("Refs").Cells(6, intPatchCol) = vbNullString
 
     ' LOG
     Open strLogFilePathAndName For Append As #1: Print #1, Now & " " & "About to call patch4_2_1 module": Close #1

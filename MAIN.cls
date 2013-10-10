@@ -46,6 +46,9 @@ End Sub
 
 
 Private Sub Worksheet_Activate()
+
+Call mSetupWorksheetExists
+
     With Sheets("Refs")
         If .Range("Q2").Value = "FALSE" Or .Range("Q2").Value = False Or .Range("Q2").Value = vbNullString Then
             If MsgBox("Some back-end code needs to be udpated. You should do that soon. How about now?", vbYesNo + vbExclamation) = vbYes Then
@@ -59,6 +62,8 @@ Private Sub Worksheet_Activate()
 End Sub
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+
+Call mSetupWorksheetExists
 
 If Target.Address = "$R$13" Then Call mShowALLTHETHINGS Else Call mHideSOMEOFTHETHINGS(True, True)
 
