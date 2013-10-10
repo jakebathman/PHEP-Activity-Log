@@ -1,24 +1,24 @@
 Attribute VB_Name = "m_Export_Report"
-'v4.2.1
+'v4.3
 
 Option Explicit
 
 Public Sub mExportMonthlyReport()
 
-    Dim v
-    ' This code fixes the report month formula in "Refs" and can be removed in later versions (but won't hurt anything to stay in)
-    With ThisWorkbook.Sheets("Refs")
-        If .Range("I21").Value Like "September" Or .Range("I21").Value Like "October" Then
-            v = ActiveSheet.Name
-            .Visible = xlSheetVisible
-            .Range("I2:I124").ClearContents
-            .Range("I2").FormulaR1C1 = "=CHOOSE(IF(MONTH(RC[-3])+1=13,1,MONTH(RC[-3])+1),""December"",""January"",""February"",""March"",""April"",""May"",""June"",""July"",""August"",""September"",""October"",""November"")"
-            .Activate
-            .Range("I2").AutoFill Destination:=Range("I2:I124"), Type:=xlFillDefault
-            Sheets(v).Activate
-            .Visible = xlSheetVeryHidden
-        End If
-    End With
+'    Dim v
+'    ' This code fixes the report month formula in "Refs" and can be removed in later versions (but won't hurt anything to stay in)
+'    With ThisWorkbook.Sheets("Refs")
+'        If .Range("I21").Value Like "September" Or .Range("I21").Value Like "October" Then
+'            v = ActiveSheet.Name
+'            .Visible = xlSheetVisible
+'            .Range("I2:I124").ClearContents
+'            .Range("I2").FormulaR1C1 = "=CHOOSE(IF(MONTH(RC[-3])+1=13,1,MONTH(RC[-3])+1),""December"",""January"",""February"",""March"",""April"",""May"",""June"",""July"",""August"",""September"",""October"",""November"")"
+'            .Activate
+'            .Range("I2").AutoFill Destination:=Range("I2:I124"), Type:=xlFillDefault
+'            Sheets(v).Activate
+'            .Visible = xlSheetVeryHidden
+'        End If
+'    End With
 
     frmExportSheetSelection.Show
 

@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Misc_Code"
-'v4.2.1
+'v4.3
 
 Option Explicit
 Public Const pthUpdatedWorkbookPath = "\\ccdata01\homeland_security\PHEP Documentation\Monthly Reports\Activity Tracking\"
@@ -63,7 +63,52 @@ End Sub
 
 
 
+'---------------------------------------------------------------------------------------
+' Procedure : e(n As String)
+' Author    : Jake Bathman
+' Date      : 10/16/2012
+' Purpose   : Update the range Y2:Y124 in sheet "Refs" to reflect which sheets exist
+'---------------------------------------------------------------------------------------
+'
+Public Sub updateWorksheetExists()
+    Dim i%
+    Dim intWorksheetNameCol%, intWorksheetExistsCol%
+    Dim shtRefs As Worksheet
 
+    intWorksheetNameCol = 24
+    intWorksheetExistsCol = 25
+    Set shtRefs = ThisWorkbook.Sheets("Refs")
+
+    ' loop over sheet names and see if the sheet exists
+    For i = 2 To 124
+        If e(shtRefs.Cells(i, intWorksheetNameCol).Value) Then
+            shtRefs.Cells(i, intWorksheetExistsCol) = True
+        Else
+            shtRefs.Cells(i, intWorksheetExistsCol) = False
+        End If
+    Next i
+
+End Sub
+
+
+'---------------------------------------------------------------------------------------
+' Procedure : e(n As String)
+' Author    : Jake Bathman
+' Date      : 10/16/2012
+' Purpose   : Check if a sheet exists in the workbook. Returns TRUE if the sheet exists
+'---------------------------------------------------------------------------------------
+'
+
+Public Function e(n As String) As Boolean
+    Dim ws As Worksheet
+    e = False
+    For Each ws In Worksheets
+        If n = ws.Name Then
+            e = True
+            Exit Function
+        End If
+    Next ws
+End Function
 
 
 
@@ -677,7 +722,7 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
     ' comment lines) in the VBComponent referenced by VBComp. Returns -1
     ' if the VBProject is locked.
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    Dim N As Long
+    Dim n As Long
     Dim S As String
     Dim LineCount As Long
 
@@ -687,8 +732,8 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
     End If
 
     With VBComp.CodeModule
-        For N = 1 To .CountOfLines
-            S = .Lines(N, 1)
+        For n = 1 To .CountOfLines
+            S = .Lines(n, 1)
             If Trim(S) = vbNullString Then
                 ' blank line, skip it
             ElseIf Left(Trim(S), 1) = "'" Then
@@ -696,7 +741,7 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
             Else
                 LineCount = LineCount + 1
             End If
-        Next N
+        Next n
     End With
     TotalCodeLinesInVBComponent = LineCount
 End Function
@@ -712,10 +757,10 @@ End Function
 
 Function CountCodeLines()
     Dim VBCodeModule As Object
-    Dim NumLines As Long, N As Long
+    Dim NumLines As Long, n As Long
     With ActiveWorkbook
-        For N = 1 To .VBProject.VBComponents.Count
-            Set VBCodeModule = .VBProject.VBComponents(N).CodeModule
+        For n = 1 To .VBProject.VBComponents.Count
+            Set VBCodeModule = .VBProject.VBComponents(n).CodeModule
             NumLines = NumLines + VBCodeModule.CountOfLines
         Next
     End With
@@ -764,8 +809,8 @@ Public Sub ReviseVersionNumberComment()    'Optional sOld, Optional rNew)
 
     'If sOld = vbNullString Then s = "'v4.1"
     'If rNew = vbNullString Then r = "'v4.2"
-    S = "'v4.2"
-    r = "'v4.2.1"
+    S = "'v4.2.1"
+    r = "'v4.3"
 
     For Each v In ThisWorkbook.VBProject.VBComponents
         x = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)

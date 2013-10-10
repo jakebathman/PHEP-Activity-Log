@@ -1,5 +1,5 @@
 Attribute VB_Name = "u_Update_Code"
-'v4.2.1
+'v4.3
 
 Option Explicit
 Public Const pthUpdatedWorkbookPath = "\\ccdata01\homeland_security\PHEP Documentation\Monthly Reports\Activity Tracking\"
@@ -612,7 +612,7 @@ End Function
 
 
 Public Sub CountTheLines()
-    Dim N As Long
+    Dim n As Long
     Dim S As String
     Dim LineCount As Long
     Dim v
@@ -624,8 +624,8 @@ Public Sub CountTheLines()
 
     For Each v In ThisWorkbook.VBProject.VBComponents
         With v.CodeModule
-            For N = 1 To .CountOfLines
-                S = .Lines(N, 1)
+            For n = 1 To .CountOfLines
+                S = .Lines(n, 1)
                 If Trim(S) = vbNullString Then
                     ' blank line, skip it
                 ElseIf Left(Trim(S), 1) = "'" Then
@@ -633,7 +633,7 @@ Public Sub CountTheLines()
                 Else
                     LineCount = LineCount + 1
                 End If
-            Next N
+            Next n
         End With
     Next
     MsgBox ("There are " & LineCount & " lines in this project.")
@@ -650,7 +650,7 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
     ' comment lines) in the VBComponent referenced by VBComp. Returns -1
     ' if the VBProject is locked.
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    Dim N As Long
+    Dim n As Long
     Dim S As String
     Dim LineCount As Long
 
@@ -660,8 +660,8 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
     End If
 
     With VBComp.CodeModule
-        For N = 1 To .CountOfLines
-            S = .Lines(N, 1)
+        For n = 1 To .CountOfLines
+            S = .Lines(n, 1)
             If Trim(S) = vbNullString Then
                 ' blank line, skip it
             ElseIf Left(Trim(S), 1) = "'" Then
@@ -669,7 +669,7 @@ Public Function TotalCodeLinesInVBComponent(VBComp As VBIDE.VBComponent) As Long
             Else
                 LineCount = LineCount + 1
             End If
-        Next N
+        Next n
     End With
     TotalCodeLinesInVBComponent = LineCount
 End Function

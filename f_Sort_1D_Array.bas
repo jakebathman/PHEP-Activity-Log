@@ -1,5 +1,5 @@
 Attribute VB_Name = "f_Sort_1D_Array"
-'v4.2.1
+'v4.3
 
 Option Explicit
 
@@ -549,7 +549,7 @@ Public Function ReverseArrayInPlace2(InputArray As Variant, _
     ' set to less than 0 the LB and UB parameters. To reverse only part of tbe array, set LB and/or
     ' UB to the LBound and UBound of the sub array to be reversed.
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-    Dim N As Long
+    Dim n As Long
     Dim Temp As Variant
     Dim Ndx As Long
     Dim Ndx2 As Long
@@ -776,7 +776,7 @@ Public Function IsArrayAllocated(arr As Variant) As Boolean
     ' been sized with Redim, or a dynamic array that has been Erased).
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-    Dim N As Long
+    Dim n As Long
 
     '''''''''''''''''''''''''''''''''''''''''''''''''''
     ' If Arr is not an array, return FALSE and get out.
@@ -791,7 +791,7 @@ Public Function IsArrayAllocated(arr As Variant) As Boolean
     ' an error will occur. Test Err.Number to see if an error occured.
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
     On Error Resume Next
-    N = UBound(arr, 1)
+    n = UBound(arr, 1)
     If Err.Number = 0 Then
         '''''''''''''''''''''''''''''''''''''
         ' No error. Array has been allocated.

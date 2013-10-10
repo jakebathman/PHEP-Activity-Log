@@ -7,7 +7,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = True
-'v4.2.1
+'v4.3
 
 Option Explicit
 
@@ -59,6 +59,9 @@ Private Sub Worksheet_Activate()
 End Sub
 
 Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+
+If Target.Address = "$R$13" Then Call mShowALLTHETHINGS Else Call mHideSOMEOFTHETHINGS(True, True)
+
     With Sheets("Refs")
         If .Range("Q2").Value = "FALSE" Or .Range("Q2").Value = False Or .Range("Q2").Value = vbNullString Then
             If MsgBox("Some back-end code needs to be udpated. You should do that soon. How about now?", vbYesNo + vbExclamation) = vbYes Then

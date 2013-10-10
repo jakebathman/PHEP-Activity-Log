@@ -1,5 +1,5 @@
 Attribute VB_Name = "v_Version_Num"
-'v4.2.1
+'v4.3
 
 Option Explicit
 
@@ -8,4 +8,5 @@ Public Function vVersionNum()
     vVersionNum = "2"
     vVersionNum = "3"
     vVersionNum = "4"
+    vVersionNum = "4.3"
 End Function

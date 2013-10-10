@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Export_For_Git"
-'v4.2.1
+'v4.3
 
 Option Explicit
 

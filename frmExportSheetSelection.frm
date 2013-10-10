@@ -13,7 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'v4.2.1
+'v4.3
 
 Option Explicit
 
@@ -66,10 +66,13 @@ Private Sub cmbMonths_Change()
         For j = 1 To 3
             If arrPeriodsAndMonth(m, j, 1) = vbNullString Then Exit For
         Next j
-        arrPeriodsAndMonth(m, j, 1) = arrSheets(i)
-        arrPeriodsAndMonth(m, j, 2) = ThisWorkbook.Sheets(arrSheets(i)).Range("B3").Value
-        arrPeriodsAndMonth(m, j, 3) = ThisWorkbook.Sheets(arrSheets(i)).Range("B5").Value
-        arrPeriodsAndMonth(m, j, 4) = ThisWorkbook.Sheets(arrSheets(i)).Range("O5").Value
+        'If the PayPeriod start date is prior to 180 days ago, skip it
+        If ThisWorkbook.Sheets(arrSheets(i)).Range("B5").Value > (Date - 180) Then
+            arrPeriodsAndMonth(m, j, 1) = arrSheets(i)
+            arrPeriodsAndMonth(m, j, 2) = ThisWorkbook.Sheets(arrSheets(i)).Range("B3").Value
+            arrPeriodsAndMonth(m, j, 3) = ThisWorkbook.Sheets(arrSheets(i)).Range("B5").Value
+            arrPeriodsAndMonth(m, j, 4) = ThisWorkbook.Sheets(arrSheets(i)).Range("O5").Value
+        End If
     Next i
 
     m = fMonthToInteger(frmExportSheetSelection.cmbMonths.Value)

@@ -1,6 +1,7 @@
 Attribute VB_Name = "m_New_Sheet"
-'v4.2.1
+'v4.3
 
+Public boolSheetAdded As Boolean
 Option Explicit
 
 Public Sub mNewSheet()
@@ -33,43 +34,29 @@ Public Sub mNewSheet()
     strNextPayPeriod = fMakeTwoDigitPayPeriod(intNextPayPeriod)
     strOldPayPeriod = fMakeTwoDigitPayPeriod(intOldPayPeriod)
 
-
-    If dtToday > DateSerial(intYear, 8, 31) And dtToday < DateSerial(intYear, 12, 31) Then
-        intYear = intNextYear
-    End If
-    If (dtToday + 14) > DateSerial(intYear, 8, 31) And dtToday < DateSerial(intYear, 12, 31) Then
-        intNextYear = intYear + 1
-    Else
-        intNextYear = intYear
-    End If
-    If (dtToday - 14) < DateSerial(intYear, 8, 31) And dtToday > DateSerial(intYear, 1, 1) Then
-        intOldYear = intYear - 1
-    Else
-        intOldYear = intYear
-    End If
-
-
     strNewSheetName = "FY" & Right(CStr(intYear), 2) & "-" & strPayPeriod
     strReallyNewSheetName = "FY" & Right(CStr(intNextYear), 2) & "-" & strNextPayPeriod
     strOldSheetName = "FY" & Right(CStr(intOldYear), 2) & "-" & strOldPayPeriod
 
-    boolSheetDoesntExist = True
+    Call updateWorksheetExists
 
-    For i = 1 To Sheets.Count
-        If StrComp(strNewSheetName, Sheets(i).Name, vbTextCompare) = 0 Then
-            boolSheetDoesntExist = False
-            If MsgBox("Looks like you already have a tracking sheet for the current pay period." & vbNewLine & vbNewLine _
-                    & "If you're getting antsy, you can create one for the next pay period. Do that?", vbYesNo, "Sheet exists!!") = vbYes Then
-                Call fAddSheet(strReallyNewSheetName, strNewSheetName, intNextYear, intNextPayPeriod)
+    For i = 2 To 124
+        With Sheets("Refs")
+            If .Cells(i, 4).Value <= dtToday And .Cells(i, 5).Value >= dtToday Then
+                If .Range("Y" & i).Value = False Then
+                    Call fAddSheet(.Range("X" & i).Value, "MAIN", .Range("G" & i).Value, .Range("C" & i).Value)
+                Else
+                    frmAddSheet.Show
+                End If
+                Exit For
             End If
-            Exit For
-        End If
+        End With
     Next i
 
-    If boolSheetDoesntExist Then
-        'Call fAddSheet(strNewSheetName, strOldSheetName, intYear, intCurPayPeriod)
-        Call fAddSheet(strNewSheetName, "MAIN", intYear, intCurPayPeriod)
-    End If
+
+    Unload frmAddSheet
+    Call updateWorksheetExists
+
 
     Call MaintenanceForAddActivityButton
 
@@ -93,8 +80,8 @@ Public Function fAddSheet(strShtName, strOld, yr, pp)
     Call mShowALLTHETHINGS
     On Error GoTo errFixMissingSheet
     With ActiveWorkbook
-        .Sheets("templatesheet").Copy After:=.Sheets(strOld)
-        Set sht = .Sheets(.Sheets(strOld).Index + 1)
+        .Sheets("templatesheet").Copy After:=.Sheets("MAIN")
+        Set sht = .Sheets(.Sheets("MAIN").Index + 1)
     End With
     sht.Name = strShtName
     sht.Range("B1").Value = yr
