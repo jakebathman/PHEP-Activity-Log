@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Sort_Rows"
-'v4.3
+'v4.4
 
 Option Explicit
 

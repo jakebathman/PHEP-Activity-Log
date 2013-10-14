@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Export_Report"
-'v4.3
+'v4.4
 
 Option Explicit
 
@@ -84,20 +84,21 @@ Public Sub mExportSheets(ByVal strSheet1$, Optional ByVal strSheet2$, Optional B
     Dim cSheets As New Collection
     Dim S, v, arr()
 
-    If strSheet2 = vbNullString Then
-        intNumSheetsToExport = 1
+    If strSheet1 <> vbNullString Then
+        intNumSheetsToExport = intNumSheetsToExport + 1
         cSheets.Add strSheet1
-    ElseIf strSheet3 = vbNullString Then
-        intNumSheetsToExport = 2
-        cSheets.Add strSheet1
-        cSheets.Add strSheet2
-    Else
-        intNumSheetsToExport = 3
-        cSheets.Add strSheet1
-        cSheets.Add strSheet2
-        cSheets.Add strSheet3
     End If
 
+    If strSheet2 <> vbNullString Then
+        intNumSheetsToExport = intNumSheetsToExport + 1
+        cSheets.Add strSheet2
+    End If
+    
+    If strSheet3 <> vbNullString Then
+        intNumSheetsToExport = intNumSheetsToExport + 1
+        cSheets.Add strSheet3
+    End If
+    
     i = 1
     'Sort the sheets
     If cSheets.Count > 1 Then

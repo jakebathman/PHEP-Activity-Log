@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_New_Sheet"
-'v4.3
+'v4.4
 
 Public boolSheetAdded As Boolean
 Option Explicit
