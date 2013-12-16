@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_New_Sheet"
-'v4.4
+'v4.5
 
 Public boolSheetAdded As Boolean
 Option Explicit
@@ -34,9 +34,20 @@ Public Sub mNewSheet()
     strNextPayPeriod = fMakeTwoDigitPayPeriod(intNextPayPeriod)
     strOldPayPeriod = fMakeTwoDigitPayPeriod(intOldPayPeriod)
 
-    strNewSheetName = "FY" & Right(CStr(intYear), 2) & "-" & strPayPeriod
-    strReallyNewSheetName = "FY" & Right(CStr(intNextYear), 2) & "-" & strNextPayPeriod
-    strOldSheetName = "FY" & Right(CStr(intOldYear), 2) & "-" & strOldPayPeriod
+    If intCurPayPeriod <> 1 Then
+        strNewSheetName = "FY" & Right(CStr(intYear), 2) & "-" & strPayPeriod
+    Else
+        strNewSheetName = "FY" & Right(CStr(intNextYear), 2) & "-" & strPayPeriod
+    End If
+
+    If intNextPayPeriod <= 2 Then
+        strReallyNewSheetName = "FY" & Right(CStr(intNextYear), 2) & "-" & strNextPayPeriod
+        strOldSheetName = "FY" & Right(CStr(intOldYear), 2) & "-" & strOldPayPeriod
+    Else
+        strReallyNewSheetName = "FY" & Right(CStr(intNextYear), 2) & "-" & strNextPayPeriod
+        strOldSheetName = "FY" & Right(CStr(intYear), 2) & "-" & strOldPayPeriod
+    End If
+
 
     Call updateWorksheetExists
 
@@ -100,3 +111,4 @@ errFixMissingSheet:
     Resume
 
 End Function
+

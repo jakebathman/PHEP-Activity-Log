@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Add_Activity_Row"
-'v4.4
+'v4.5
 
 Option Explicit
 
@@ -46,6 +46,7 @@ Public Sub mAddActivityRow(strAct$, strDate$, dblTime#, intDateCol%)
             Case vbNo
                 Call fAddNewLineAndActivity(intFirstEmptyActRow, intDateCol, dblTime, strAct)
             Case Else
+            Rows(intFirstEmptyActRow).Delete
                 End
         End Select
     ElseIf boolActExists Then
@@ -77,6 +78,23 @@ Public Function fAddNewLineAndActivity(intRow%, intCol%, dblT#, strA$)
             End Select
         End With
     Next i
+
+    ' Color Time Off row a light green
+    If strA = "Time Off" Then
+        With Range("A" & intRow & ":P" & intRow).Interior
+            .Pattern = xlSolid
+            .PatternColorIndex = xlAutomatic
+            .Color = 14088651
+            .TintAndShade = 0
+            .PatternTintAndShade = 0
+        End With
+    Else
+        With Range("A" & intRow & ":P" & intRow).Interior
+            .Pattern = xlNone
+            .TintAndShade = 0
+            .PatternTintAndShade = 0
+        End With
+    End If
 End Function
 
 

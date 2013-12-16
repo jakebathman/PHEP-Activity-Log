@@ -1,5 +1,5 @@
 Attribute VB_Name = "z_Change_Log"
-'v4.4
+'v4.5
 
 Option Explicit
 
