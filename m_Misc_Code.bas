@@ -1,5 +1,5 @@
 Attribute VB_Name = "m_Misc_Code"
-'v4.5
+'v4.6
 
 Option Explicit
 Public Const pthUpdatedWorkbookPath = "\\ccdata01\homeland_security\PHEP Documentation\Monthly Reports\Activity Tracking\"
@@ -398,8 +398,8 @@ Public Sub uUpdateTheUpdateCode()
         'Debug.Print v
         strVersNew = CStr(v)
         Sheets("Refs").Range("Q2").Value = "TRUE"
-        Sheets("Refs").Range("Q3").Value = "UpdateCodeVersion"
-        Sheets("Refs").Range("Q4").Value = strVersNew
+        Sheets("Refs").Range("R1").Value = "UpdateCodeVersion"
+        Sheets("Refs").Range("R2").Value = strVersNew
         t = Timer
         While Timer < t + 0.5
             DoEvents
@@ -809,8 +809,8 @@ Public Sub ReviseVersionNumberComment()    'Optional sOld, Optional rNew)
 
     'If sOld = vbNullString Then s = "'v4.1"
     'If rNew = vbNullString Then r = "'v4.2"
-    S = "'v4.4"
-    r = "'v4.5"
+    S = "'v4.5"
+    r = "'v4.6"
 
     For Each v In ThisWorkbook.VBProject.VBComponents
         x = v.CodeModule.Find(S, 1, 1, 2, 5, False, True, False)

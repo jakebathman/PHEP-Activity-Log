@@ -13,7 +13,7 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-'v4.5
+'v4.6
 
 Option Explicit
 
@@ -63,6 +63,7 @@ Private Sub cmbMonths_Change()
 
     For i = 1 To UBound(arrSheets)
         m = fMonthToInteger(ThisWorkbook.Sheets(arrSheets(i)).Range("B3").Value)
+        If arrSheets(i) = "FY14-14" Then m = 6 ' manually correct month for FY14-14 reporting
         For j = 1 To 3
             If arrPeriodsAndMonth(m, j, 1) = vbNullString Then Exit For
         Next j
@@ -83,7 +84,7 @@ Private Sub cmbMonths_Change()
         Y = arrPeriodsAndMonth(m, j, 3)    'Period start date
         z = arrPeriodsAndMonth(m, j, 4)    'Period end date
         If v <> vbNullString Then
-            If v Like frmExportSheetSelection.cmbMonths.Value Then
+            If v Like frmExportSheetSelection.cmbMonths.Value Or x Like "FY14-14" Then
                 boolHasExportableStuff = True
                 Y = MonthName(Month(Y), True) & " " & Day(Y)
                 z = MonthName(Month(z), True) & " " & Day(z)
@@ -97,7 +98,17 @@ Private Sub cmbMonths_Change()
     With frmExportSheetSelection
         If .chk1.Visible Then .chk1.Value = True Else .chk1.Value = False
         If .chk2.Visible Then .chk2.Value = True Else .chk2.Value = False
-        If .chk3.Visible Then .chk3.Value = True Else .chk3.Value = False
+        If .chk3.Visible Then
+            .chk3.Value = True
+            .btnCancel.Top = 125
+            .btnExport.Top = 125
+            .Height = 200
+        Else
+            .chk3.Value = False
+            .btnCancel.Top = 100
+            .btnExport.Top = 100
+            .Height = 175
+        End If
     End With
 
 
